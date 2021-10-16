@@ -1,0 +1,102 @@
+package com.example.fitpartner;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private BottomNavigationView bottomNavigationView; //바텀 네이게이션 뷰 (하단바)
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private Frag_Progress frag_progress; // 달성도
+    private Frag_FoodLog frag_foodLog;  //식습관 관리
+    private Frag_WorkoutLog frag_workoutLog; //운동 일지
+    private Frag_PictureLog frag_pictureLog; //사진 일지
+    private ImageButton imgbtn_mypage; //마이페이지 버튼
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        bottomNavigationView = findViewById(R.id.bottomNavi);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_progress:
+                        setFrag(0);
+                        break;
+                    case R.id.action_workoutLog:
+                        setFrag(1);
+                        break;
+                    case R.id.action_pictureLog:
+                        setFrag(2);
+                        break;
+                    case R.id.action_foodLog:
+                        setFrag(3);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        frag_progress = new Frag_Progress();
+        frag_foodLog = new Frag_FoodLog();
+        frag_workoutLog = new Frag_WorkoutLog();
+        frag_pictureLog = new Frag_PictureLog();
+        setFrag(0); //첫 프래그먼트 화면을 무엇으로 지정할것인지 선택
+
+
+        imgbtn_mypage = findViewById(R.id.imageButton_mypage);
+        imgbtn_mypage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,SubActivity_Mypage.class);
+
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    //프래그먼트 교체가 일어나는 실행문이다.
+    private void setFrag(int n) {
+        fm = getSupportFragmentManager();
+        ft = fm.beginTransaction();
+        switch (n){
+            case 0:
+                ft.replace(R.id.main_frame,frag_progress);
+                ft.commit();
+                break;
+            case 1:
+                ft.replace(R.id.main_frame,frag_workoutLog);
+                ft.commit();
+                break;
+            case 2:
+                ft.replace(R.id.main_frame,frag_pictureLog);
+                ft.commit();
+                break;
+            case 3:
+                ft.replace(R.id.main_frame,frag_foodLog);
+                ft.commit();
+                break;
+        }
+    }
+
+
+
+
+}

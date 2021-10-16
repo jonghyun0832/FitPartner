@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/action_progress"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title="운동달성도"/>
+
+    <item
+        android:id="@+id/action_workoutLog"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_note_add_24"
+        android:title="운동 일지"/>
+
+
+    <item
+        android:id="@+id/action_pictureLog"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_picturelog_24"
+        android:title="사진 일지"/>
+
+    <item
+        android:id="@+id/action_foodLog"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_foodlog_24"
+        android:title="식습관 관리"/>
+</menu>
