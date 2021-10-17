@@ -33,7 +33,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.android.support:design:31.0.0'
-
+    implementation 'androidx.activity:activity:1.4.0-rc01'
+    implementation 'androidx.fragment:fragment:1.4.0-alpha10'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 

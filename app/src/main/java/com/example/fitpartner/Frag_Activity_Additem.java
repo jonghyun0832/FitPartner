@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.BlockingDeque;
 
 public class Frag_Activity_Additem extends AppCompatActivity {
 
@@ -30,6 +32,8 @@ public class Frag_Activity_Additem extends AppCompatActivity {
     private TextView tv_endTime;
     private Button btn_add;
     private Button btn_back;
+
+    private int editnum = 9999;
 
     private int starthour;
     private int startminute;
@@ -51,6 +55,9 @@ public class Frag_Activity_Additem extends AppCompatActivity {
     int pickerHour = Integer.parseInt(getHour);
     int pickerMinute = Integer.parseInt(getMinute);
     int pickerMinute2 = pickerMinute;
+
+    private static final int WOKROUT_RESULT_CODE = 7070;
+    private static final int EDIT_CODE = 8080;
 
 
 
@@ -96,6 +103,8 @@ public class Frag_Activity_Additem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frag_additem);
         Log.d(TAG, "onCreate: ");
+        starthour = pickerHour;
+        endhour = transHour;
 
 
         //레이아웃 연결
@@ -113,8 +122,24 @@ public class Frag_Activity_Additem extends AppCompatActivity {
         et_exData.setFocusable(false);
 
         //처음 열렸을때 타임피커 텍스트 기본시간설정
-        tv_startTime.setText(getHour + " : " + getMinute);
+        tv_startTime.setText(pickerHour + " : " + getMinute);
         tv_endTime.setText(transHour + " : " + getMinute);
+
+
+        //인텐트 받기
+        Intent editintent = getIntent();
+        Bundle editbundle = editintent.getExtras();
+        try{
+            String edit_exdata = editbundle.getString("edit_exdata");
+            String edit_starttime = editbundle.getString("edit_starttime");
+            editnum = editbundle.getInt("a_position");
+            et_exData.setText(edit_exdata);
+            tv_startTime.setText(edit_starttime);
+
+        }catch (Exception e){
+        }
+
+
 
 
         //운동 제목 기록
@@ -166,7 +191,28 @@ public class Frag_Activity_Additem extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "시작시간이 종료시간보다 뒤에 있습니다.", Toast.LENGTH_SHORT).show();
                     }
                 } else{ //정상적인 시작시간과 종료시간일 경우
-                    Log.d(TAG, "onClick: Intent송신 ");
+                    Log.d("111", "onClick: 리사이클러만들기 ");
+
+                    Intent backintent = new Intent();
+                    Bundle bundle = new Bundle();
+                    if(editnum == 9999){
+                        bundle.putString("exdata",et_exData.getText().toString());
+                        bundle.putString("starttime",tv_startTime.getText().toString());
+                        backintent.putExtras(bundle);
+                        setResult(WOKROUT_RESULT_CODE,backintent);
+                        Log.d("111", "onClick: " + WOKROUT_RESULT_CODE);
+                    } else {
+                        bundle.putString("exdata",et_exData.getText().toString());
+                        bundle.putString("starttime",tv_startTime.getText().toString());
+                        bundle.putInt("return_position",editnum);
+                        backintent.putExtras(bundle);
+                        setResult(EDIT_CODE,backintent);
+                        Log.d("111", "onClick: " + EDIT_CODE);
+                        //원래대로 돌려줌
+                        editnum = 9999;
+                    }
+
+                    finish();
                 }
 
             }
@@ -192,6 +238,7 @@ public class Frag_Activity_Additem extends AppCompatActivity {
         ad.setMessage("정보입력메세지입니다.");
 
         final EditText et = new EditText(Frag_Activity_Additem.this);
+        et.setText(editText.getText());
         ad.setView(et);
 
         ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {

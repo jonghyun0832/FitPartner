@@ -1,6 +1,7 @@
 package com.example.fitpartner;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class Frag_FoodLog extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("111", "onCreateView: food");
         view = inflater.inflate(R.layout.frag_foodlog,container,false);
 
         tv_water = view.findViewById(R.id.textView_water);
