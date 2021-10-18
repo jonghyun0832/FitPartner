@@ -40,14 +40,6 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
     private int img_path;
 
 
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        Log.d("111", "onAttach: ");
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

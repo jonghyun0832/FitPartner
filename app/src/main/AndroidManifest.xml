@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitPartner">
         <activity
+            android:name=".Frag_Activity_Addfood"
+            android:exported="true" />
+        <activity
             android:name=".Frag_Activity_Additem"
             android:exported="true" />
         <activity
