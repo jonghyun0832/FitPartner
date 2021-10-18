@@ -10,10 +10,11 @@
         android:layout_height="0dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="5dp"
         app:contentPadding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_cardview"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,36 +27,106 @@
                 android:id="@+id/recycle_exData"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:gravity="center"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/recycle_starttime"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="운동내용들어감"
+                android:textAlignment="textStart"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/textView_hard_starttime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_recycle_icon"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView_recycle_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline18"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/circlebutton" />
 
             <TextView
                 android:id="@+id/recycle_starttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="시간부터"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/textView_hard_starttime"
+                app:layout_constraintStart_toEndOf="@+id/textView_hard_starttime" />
+
+            <TextView
+                android:id="@+id/textView_hard_starttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:text="운동시간 :"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/imageView_recycle_icon"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_recycle_icon" />
+
+            <TextView
+                android:id="@+id/textView_hard_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="부터"
+                android:textSize="16sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/textView_hard_starttime"
+                app:layout_constraintStart_toEndOf="@+id/recycle_starttime" />
+
+            <TextView
+                android:id="@+id/recycle_endtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="시간까지"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/textView_hard_starttime"
+                app:layout_constraintStart_toEndOf="@+id/textView_hard_from" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline18"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView_recycle_icon"
-                app:layout_constraintTop_toBottomOf="@+id/recycle_exData" />
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="70dp" />
+
+            <TextView
+                android:id="@+id/textView_hard_until"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="까지"
+                android:textSize="16sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/textView_hard_starttime"
+                app:layout_constraintStart_toEndOf="@+id/recycle_endtime" />
+
+            <TextView
+                android:id="@+id/textView_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="2021-10-18"
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintBottom_toTopOf="@+id/recycle_exData"
+                app:layout_constraintEnd_toEndOf="@+id/recycle_exData"
+                app:layout_constraintStart_toStartOf="@+id/recycle_exData"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -65,5 +136,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="120dp" />
+        app:layout_constraintGuide_begin="160dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

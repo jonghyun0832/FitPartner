@@ -59,6 +59,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         holder.tv_exData.setText(arrayList.get(position).getTv_exData());
         //추가필요
         holder.tv_starttime.setText(arrayList.get(position).getTv_startTime());
+        holder.tv_endtime.setText(arrayList.get(position).getTv_endTime());
+        holder.tv_date.setText(arrayList.get(position).getTv_date());
 
 
     }
@@ -85,14 +87,18 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         public TextView tv_exData;
         //추가필요
         public TextView tv_starttime;
+        public TextView tv_endtime;
+        public TextView tv_date;
 
 
-        public WorkoutViewHolder(@NonNull View itemView, final OnItemClickEventListener a_itemClickListener) {
+        public WorkoutViewHolder(@NonNull View itemView, final OnItemClickEventListener mItemClickListener) {
             super(itemView);
             this.iv_recycle_icon = (ImageView) itemView.findViewById(R.id.imageView_recycle_icon);
             this.tv_exData = (TextView)itemView.findViewById(R.id.recycle_exData);
             //추가필요
             this.tv_starttime = (TextView)itemView.findViewById(R.id.recycle_starttime);
+            this.tv_endtime = (TextView)itemView.findViewById(R.id.recycle_endtime);
+            this.tv_date = (TextView)itemView.findViewById(R.id.textView_date);
 
             //클릭시
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +106,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                 public void onClick(View view) {
                     final int pos = getBindingAdapterPosition();
                     if(pos != RecyclerView.NO_POSITION){
-                        a_itemClickListener.onItemClick(view,pos);
+                        mItemClickListener.onItemClick(view,pos);
                     }
                 }
             });

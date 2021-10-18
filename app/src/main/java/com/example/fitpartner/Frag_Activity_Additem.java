@@ -9,29 +9,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.BlockingDeque;
 
 public class Frag_Activity_Additem extends AppCompatActivity {
 
-    private ImageView iv_titleBtn;
     private ImageView iv_dataBtn;
-    private EditText et_exTitle;
     private EditText et_exData;
     private TextView tv_startTime;
     private TextView tv_endTime;
     private Button btn_add;
     private Button btn_back;
+    private Spinner sp_concentrate;
 
     private int editnum = 9999;
 
@@ -45,6 +43,9 @@ public class Frag_Activity_Additem extends AppCompatActivity {
     Date mDate = new Date(now);
     SimpleDateFormat hourData = new SimpleDateFormat("HH");
     SimpleDateFormat minuteData = new SimpleDateFormat("mm");
+    SimpleDateFormat dateData = new SimpleDateFormat("yyyy-MM-dd");
+    //날짜
+    String getdate = dateData.format(mDate);
     //시
     String getHour = hourData.format(mDate);
     //분
@@ -58,6 +59,9 @@ public class Frag_Activity_Additem extends AppCompatActivity {
 
     private static final int WOKROUT_RESULT_CODE = 7070;
     private static final int EDIT_CODE = 8080;
+
+    //스피너데이터 기록
+    private int data_concentrate;
 
 
 
@@ -108,17 +112,15 @@ public class Frag_Activity_Additem extends AppCompatActivity {
 
 
         //레이아웃 연결
-        iv_titleBtn = (ImageView)findViewById(R.id.iv_TitleBtn);
         iv_dataBtn = (ImageView)findViewById(R.id.iv_DataBtn);
-        et_exTitle = (EditText)findViewById(R.id.editText_exTitle);
         et_exData = (EditText)findViewById(R.id.editText_exData);
         tv_startTime = (TextView)findViewById(R.id.textView_startTime);
         tv_endTime = (TextView)findViewById(R.id.textView_endTime);
         btn_add = (Button)findViewById(R.id.button_additem);
         btn_back = (Button)findViewById(R.id.button_back);
+        sp_concentrate = (Spinner)findViewById(R.id.spinner_concentrate);
 
         //직접 텍스트 수정불가
-        et_exTitle.setFocusable(false);
         et_exData.setFocusable(false);
 
         //처음 열렸을때 타임피커 텍스트 기본시간설정
@@ -132,23 +134,42 @@ public class Frag_Activity_Additem extends AppCompatActivity {
         try{
             String edit_exdata = editbundle.getString("edit_exdata");
             String edit_starttime = editbundle.getString("edit_starttime");
+            String edit_endtime = editbundle.getString("edit_endtime");
+            int startspinner = editbundle.getInt("spinner");
             editnum = editbundle.getInt("a_position");
             et_exData.setText(edit_exdata);
             tv_startTime.setText(edit_starttime);
+            tv_endTime.setText(edit_endtime);
+
+            //스피너 수정 초기값 설정
+            if (startspinner == 2131165349){
+                sp_concentrate.setSelection(0);
+            } else if(startspinner == 2131165350){
+                sp_concentrate.setSelection(1);
+            } else if(startspinner == 2131165351){
+                sp_concentrate.setSelection(2);
+            } else if(startspinner == 2131165348){
+                sp_concentrate.setSelection(3);
+            } else if(startspinner == 2131165352){
+                sp_concentrate.setSelection(4);
+            }
+
 
         }catch (Exception e){
         }
 
-
-
-
-        //운동 제목 기록
-        iv_titleBtn.setOnClickListener(new View.OnClickListener() {
+        //운동집중도 스피너
+        sp_concentrate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick1: ");
-                addMessage(et_exTitle);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                Log.d("111", "onItemSelected: " + adapterView.getItemAtPosition(position).toString() );
+                data_concentrate = position;
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //아무것도 안눌리면 보통으로 설정?
+                //data_concentrate = adapterView.getItemAtPosition(2).toString();
             }
         });
 
@@ -180,7 +201,7 @@ public class Frag_Activity_Additem extends AppCompatActivity {
         });
 
 
-        //추가하기 버튼 눌렀을때
+        //저장하기 버튼 눌렀을때
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,12 +219,17 @@ public class Frag_Activity_Additem extends AppCompatActivity {
                     if(editnum == 9999){
                         bundle.putString("exdata",et_exData.getText().toString());
                         bundle.putString("starttime",tv_startTime.getText().toString());
+                        bundle.putString("endtime",tv_endTime.getText().toString());
+                        bundle.putString("date",getdate);
+                        bundle.putInt("concentrate",data_concentrate);
                         backintent.putExtras(bundle);
                         setResult(WOKROUT_RESULT_CODE,backintent);
                         Log.d("111", "onClick: " + WOKROUT_RESULT_CODE);
                     } else {
                         bundle.putString("exdata",et_exData.getText().toString());
                         bundle.putString("starttime",tv_startTime.getText().toString());
+                        bundle.putString("endtime", tv_endTime.getText().toString());
+                        bundle.putInt("concentrate",data_concentrate);
                         bundle.putInt("return_position",editnum);
                         backintent.putExtras(bundle);
                         setResult(EDIT_CODE,backintent);

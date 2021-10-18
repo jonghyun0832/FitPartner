@@ -37,6 +37,8 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
     private static final int WOKROUT_RESULT_CODE = 7070;
     private static final int EDIT_CODE = 8080;
 
+    private int img_path;
+
 
 
     @Override
@@ -99,10 +101,25 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                                 Log.d("111", "onActivityResult: 잘받아왔네요");
                                 String exdata = edit_bundle.getString("exdata");
                                 String starttime = edit_bundle.getString("starttime");
+                                String endtime = edit_bundle.getString("endtime");
+                                int concentrate = edit_bundle.getInt("concentrate");
                                 int a_position = edit_bundle.getInt("return_position");
                                 final WorkoutData item = workoutarray.get(a_position);
+                                if (concentrate == 0){
+                                    img_path = R.drawable.ic_excellent;
+                                } else if (concentrate == 1){
+                                    img_path = R.drawable.ic_good;
+                                } else if (concentrate == 2){
+                                    img_path = R.drawable.ic_normal;
+                                } else if (concentrate == 3){
+                                    img_path = R.drawable.ic_bad;
+                                } else {
+                                    img_path = R.drawable.ic_terrible;
+                                }
+                                item.setIv_recycle_icon(img_path);
                                 item.setTv_exData(exdata);
                                 item.setTv_startTime(starttime);
+                                item.setTv_endTime(endtime);
                                 workoutAdapter.notifyItemChanged(a_position);
                             }
                         }
@@ -118,7 +135,9 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                 Bundle editbundle = new Bundle();
                 editbundle.putString("edit_exdata",item.getTv_exData());
                 editbundle.putString("edit_starttime",item.getTv_startTime());
+                editbundle.putString("edit_endtime",item.getTv_endTime());
                 editbundle.putInt("a_position",a_position);
+                editbundle.putInt("spinner",item.getIv_recycle_icon());
                 editIntent.putExtras(editbundle);
                 activityLauncher_edit.launch(editIntent);
                 //startActivity(editIntent);
@@ -143,7 +162,21 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                                 Log.d("111", "onActivityResult: 받아서데이터풀기");
                                 String exdata = bundle.getString("exdata");
                                 String starttime = bundle.getString("starttime");
-                                WorkoutData workout = new WorkoutData(R.drawable.circlebutton,exdata,starttime);
+                                String endtime = bundle.getString("endtime");
+                                String todaydate = bundle.getString("date");
+                                int concentrate = bundle.getInt("concentrate");
+                                if (concentrate == 0){
+                                    img_path = R.drawable.ic_excellent;
+                                } else if (concentrate == 1){
+                                    img_path = R.drawable.ic_good;
+                                } else if (concentrate == 2){
+                                    img_path = R.drawable.ic_normal;
+                                } else if (concentrate == 3){
+                                    img_path = R.drawable.ic_bad;
+                                } else {
+                                    img_path = R.drawable.ic_terrible;
+                                }
+                                WorkoutData workout = new WorkoutData(img_path,exdata,starttime,endtime,todaydate);
                                 workoutarray.add(workout);
                                 workoutAdapter.notifyDataSetChanged();
                             }

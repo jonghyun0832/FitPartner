@@ -5,4 +5,12 @@
         <item>여성</item>
     </string-array>
 
+    <string-array name="concentrate">
+        <item>매우좋음(Excellent)</item>
+        <item>좋음(Good)</item>
+        <item>보통(Normal)</item>
+        <item>나쁨(Bad)</item>
+        <item>매우나쁨(Terrible)</item>
+    </string-array>
+
 </resources>

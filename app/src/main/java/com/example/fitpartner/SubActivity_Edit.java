@@ -27,7 +27,6 @@ public class SubActivity_Edit extends AppCompatActivity {
 
     private EditText et_name;
     private EditText et_weight;
-    private Spinner sp_gender;
     private Button btn_send;
     private Button btn_cancel;
     private SharedPreferences preferences;
