@@ -119,6 +119,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                     androidx.appcompat.app.AlertDialog.Builder ad = new AlertDialog.Builder(context);
                     ad.setIcon(R.mipmap.ic_launcher);
                     ad.setTitle("삭제하시겠습니까?");
+                    ad.setCancelable(false);
                     ad.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

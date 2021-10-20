@@ -10,4 +10,7 @@
     <color name="bar">#59000000</color>
     <color name="bar_text">#C6FFFFFF</color>
     <color name="background">#ADD4CAFF</color>
+    <color name="untouch">#BCC6C6C6</color>
+    <color name="hint">#88888888</color>
+
 </resources>
