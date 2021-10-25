@@ -50,10 +50,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline27">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_compare"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView_best_picture"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline38"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_person_24" />
+
+            <TextView
+                android:id="@+id/textView_best_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0000 - 00 - 00"
+                android:textSize="22sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline38"
+                tools:layout_editor_absoluteY="20dp" />
+
+            <TextView
+                android:id="@+id/textView_best_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20dp"
+                android:ems="7"
+                android:text="몸무게"
+                android:textAlignment="textStart"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/guideline38"
+                app:layout_constraintTop_toBottomOf="@+id/textView_best_date" />
+
+            <TextView
+                android:id="@+id/textView_best_muscle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="7"
+                android:text="근골격률"
+                android:textAlignment="textStart"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/textView_best_weight"
+                app:layout_constraintTop_toBottomOf="@+id/textView_best_weight" />
+
+            <TextView
+                android:id="@+id/textView_best_fat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="7"
+                android:text="체지방률"
+                android:textAlignment="textStart"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/textView_best_weight"
+                app:layout_constraintTop_toBottomOf="@+id/textView_best_muscle" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="150dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -62,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
-        android:text="몸 상태의 변화를 확인하세요"
+        android:text="최고의 컨디션"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline27"

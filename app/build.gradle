@@ -37,6 +37,7 @@ dependencies {
     implementation 'androidx.fragment:fragment:1.4.0-alpha10'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

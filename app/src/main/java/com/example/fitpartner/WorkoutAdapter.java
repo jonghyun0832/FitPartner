@@ -2,15 +2,23 @@ package com.example.fitpartner;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +29,66 @@ import java.util.ArrayList;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder> {
 
+    /*public int itemposition;
+
+    //컨텍스트 박스 만들기
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+        MenuItem update = contextMenu.add(Menu.NONE,100,1,"수정");
+        MenuItem remove = contextMenu.add(Menu.NONE,101,2,"삭제");
+
+        update.setOnMenuItemClickListener(onEditMenu);
+        remove.setOnMenuItemClickListener(onEditMenu);
+    }
+
+    private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch(menuItem.getItemId()){
+
+                case 100:
+                    //수정
+
+                    final WorkoutData item = arrayList.get(itemposition);
+                    Intent editIntent = new Intent(context,Frag_Activity_Additem.class);
+                    Bundle editbundle = new Bundle();
+                    editbundle.putString("edit_exdata",item.getTv_exData());
+                    editbundle.putString("edit_starttime",item.getTv_startTime());
+                    editbundle.putString("edit_endtime",item.getTv_endTime());
+                    editbundle.putInt("a_position",itemposition);
+                    editbundle.putInt("spinner",item.getIv_recycle_icon());
+                    editIntent.putExtras(editbundle);
+                    context.startActivity(editIntent);
+                    //activityLauncher_edit.launch(editIntent);
+
+                    break;
+                case 101:
+                    //삭제
+                    androidx.appcompat.app.AlertDialog.Builder ad = new AlertDialog.Builder(context);
+                    ad.setIcon(R.mipmap.ic_launcher);
+                    ad.setTitle("삭제하시겠습니까?");
+                    ad.setCancelable(false);
+                    ad.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            remove(itemposition);
+                        }
+                    });
+                    ad.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = ad.create();
+                    alertDialog.show();
+
+                break;
+            }
+
+            return true;
+        }
+    };*/
 
     //클릭이벤트 리스너 인터페이스
     public interface OnItemClickEventListener {
@@ -41,6 +109,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         this.context = context;
     }
 
+    public void setAdapter(ArrayList<WorkoutData> arrayList){
+        this.arrayList = arrayList;
+
+    }
+
 
     @NonNull
     @Override
@@ -48,6 +121,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         //Log.d("cccheck", "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_workoutlog_item,parent,false);
         WorkoutViewHolder holder =new WorkoutViewHolder(view,mItemClickListener);
+        //view.setOnCreateContextMenuListener(this);
 
         return holder;
     }
@@ -61,6 +135,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         holder.tv_starttime.setText(arrayList.get(position).getTv_startTime());
         holder.tv_endtime.setText(arrayList.get(position).getTv_endTime());
         holder.tv_date.setText(arrayList.get(position).getTv_date());
+
+        /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                itemposition = holder.getBindingAdapterPosition();
+                return false;
+            }
+        });*/
 
 
     }

@@ -15,6 +15,9 @@ import android.widget.ImageButton;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView; //바텀 네이게이션 뷰 (하단바)
@@ -25,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private Frag_WorkoutLog frag_workoutLog; //운동 일지
     private Frag_PictureLog frag_pictureLog; //사진 일지
     private ImageButton imgbtn_mypage; //마이페이지 버튼
+
+    static String today;
+
+    long now = System.currentTimeMillis();
+    Date mDate = new Date(now);
+    SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
+    String dateData = dateformat.format(mDate);
+
 
 
     @Override

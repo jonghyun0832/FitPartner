@@ -1,12 +1,15 @@
 package com.example.fitpartner;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +30,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
 public class Frag_FoodLog extends Fragment {
+
+    private final String Filename = "20211023";
 
     private View view;
     private TextView tv_water;
@@ -37,6 +54,7 @@ public class Frag_FoodLog extends Fragment {
     private ImageButton imgbtn_minus;
     private ImageView iv_addfood;
     private int waters;
+
 
     private ArrayList<FoodData> foodArray;
     private FoodAdapter foodAdapter;
@@ -74,8 +92,6 @@ public class Frag_FoodLog extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_foodlog);
         gridLayoutManager = new GridLayoutManager(getActivity(),2);
 
-        /*gridLayoutManager.setReverseLayout(true);
-        gridLayoutManager.setStackFromEnd(true);*/
 
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -83,6 +99,12 @@ public class Frag_FoodLog extends Fragment {
         foodAdapter = new FoodAdapter(foodArray, getActivity()); //아직 context는 안넘겨줌
         recyclerView.setAdapter(foodAdapter);
         // 설정완료
+
+        //저장된거 불러오기
+        waters = Integer.parseInt(loadWater());
+        foodArray = loadPreference();
+        foodAdapter.setAdapter(foodArray);
+        foodAdapter.notifyDataSetChanged();
 
         //온클릭구현한거(어답터먼저) 메인에서 사용
         foodAdapter.setOnClickListener(new FoodAdapter.myRecyclerViewClickListener() {
@@ -168,13 +190,13 @@ public class Frag_FoodLog extends Fragment {
                                 byte[] mbyteArray = bundle.getByteArray("send_byteArray");
                                 if (mbyteArray != null){
                                     Bitmap mbitmap = byteArrayToBitmap(mbyteArray);
-                                    food = new FoodData(mbitmap,calorie,protein,mdate,mtime);
+                                    food = new FoodData(mbitmap,calorie,protein,mdate,mtime,null);
                                 } else{ //사진없을때
-                                    food = new FoodData(null,calorie,protein,mdate,mtime);
+                                    food = new FoodData(null,calorie,protein,mdate,mtime,null);
                                 }
 
 
-                                foodArray.add(food);
+                                foodArray.add(0,food);
                                 foodAdapter.notifyDataSetChanged();
                             }
                         }
@@ -202,6 +224,112 @@ public class Frag_FoodLog extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
         return bitmap;
     }
+
+
+    private void saveWater() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String water = Integer.toString(waters);
+        editor.putString("Water",water);
+        editor.apply();
+    }
+
+    private String loadWater() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        String water = sharedPreferences.getString("Water","0");
+        return water;
+    }
+
+    private void savePreference() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new GsonBuilder().create();
+        //비트맵만 변환해주고 다시넣기
+        for (int i = 0; i < foodArray.size(); i++){
+            String path = saveBitmapToPng(foodArray.get(i).getIv_food_picture(),i);
+            foodArray.get(i).setBitmapToString(path);
+            foodArray.get(i).setIv_food_picture(null);
+        }
+        String json = gson.toJson(foodArray);
+        editor.putString("Foodlog",json);
+        editor.apply();
+        Log.d("111", "savePreference: 일단 저장했음");
+
+    }
+
+
+    private ArrayList<FoodData> loadPreference(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains("Foodlog")){
+            Gson gson = new GsonBuilder().create();
+            String json = sharedPreferences.getString("Foodlog","");
+            Type foodlogType = new TypeToken<ArrayList<FoodData>>(){}.getType();
+            foodArray = gson.fromJson(json,foodlogType);
+
+            for (int i = 0; i < foodArray.size(); i++){
+                Bitmap bitimg;
+                if (foodArray.get(i).getBitmapToString() != null){
+                    String imgpath = foodArray.get(i).getBitmapToString();
+                    bitimg = BitmapFactory.decodeFile(imgpath);
+                }
+                else {
+                    bitimg = null;
+                }
+                //Bitmap bitimg = loadPngtoBitmap(i);
+                foodArray.get(i).setIv_food_picture(bitimg);
+            }
+
+            Log.d("111", "loadPreference: " + foodArray.size());
+            Log.d("111", "loadPreference: 일단 불러왔음");
+            return foodArray;
+        }
+        return foodArray;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        savePreference();
+        saveWater();
+    }
+
+    public String saveBitmapToPng(Bitmap bitmap, int i) {
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
+        String dateData = dateformat.format(mDate);
+
+
+        File tempFile = new File(getActivity().getFilesDir(),dateData + "savephoto" + i);
+        String imgpath = getActivity().getFilesDir() + "/" + dateData + "savephoto" + i;
+        Log.d("111", "saveBitmapToPng: 파일위치" + getActivity().getCacheDir() + " 번호 : " + i);
+        try{
+          tempFile.createNewFile();
+          FileOutputStream out = new FileOutputStream(tempFile);
+          bitmap.compress(Bitmap.CompressFormat.PNG,100,out);
+          out.close();
+            Log.d("111", "saveBitmapToJpeg: 저장성공");
+          return imgpath;
+        }catch (Exception e){
+            Log.d("111", "saveBitmapToJpeg: 저장실패");
+            return null;
+        }
+    }
+
+    /*public Bitmap loadPngtoBitmap(int i){
+
+        try{
+            String imgpath = getActivity().getFilesDir() + "/" + "savephoto" + i;
+            Bitmap bm = BitmapFactory.decodeFile(imgpath);
+            Log.d("111", "loadPngtoBitmap: 로드성공");
+            return bm;
+        }catch (Exception e){
+            Log.d("111", "loadPngtoBitmap: 로드실패");
+            return null;
+        }
+
+    }*/
 
 
 

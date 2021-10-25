@@ -1,13 +1,18 @@
 package com.example.fitpartner;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,16 +22,26 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListener
 
+    private final String Filename = "20211023";
+
     private Button btn_add;
-    //private Button btn_prac;
     private ArrayList<WorkoutData> workoutarray;
     private WorkoutAdapter workoutAdapter;
     private RecyclerView recyclerView;
@@ -51,7 +66,6 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
 
         //btn_add.setOnClickListener(this); -> implement 해서 new가 문제인지 확인해보기
 
-        //btn_prac = (Button)view.findViewById(R.id.button_prac);
         //리사이클러뷰용
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_workout);
         linearLayoutManager = new LinearLayoutManager(getActivity());//컨택스트 넣는곳
@@ -68,6 +82,12 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
         //리사이클러뷰에 어댑터 장착
         workoutAdapter = new WorkoutAdapter(workoutarray,getActivity());
         recyclerView.setAdapter(workoutAdapter);
+
+        //저장된거 불러와서 알리기까지
+        workoutarray = loadPreference();
+        workoutAdapter.setAdapter(workoutarray);
+        workoutAdapter.notifyDataSetChanged();
+
 
 
         /*btn_prac.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +143,45 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
             @Override
             public void onItemClick(View a_view, int a_position) {
                 final WorkoutData item = workoutarray.get(a_position);
-                Intent editIntent = new Intent(getActivity(),Frag_Activity_Additem.class);
+
+                androidx.appcompat.app.AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                View dialog_view = inflater.inflate(R.layout.dialog_workout_view,null);
+
+                TextView tv_exdataExpansion = dialog_view.findViewById(R.id.textView_exdata_expansion);
+                tv_exdataExpansion.setText(item.getTv_exData());
+
+                ad.setPositiveButton("수정하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent editIntent = new Intent(getActivity(),Frag_Activity_Additem.class);
+                        Bundle editbundle = new Bundle();
+                        editbundle.putString("edit_exdata",item.getTv_exData());
+                        editbundle.putString("edit_starttime",item.getTv_startTime());
+                        editbundle.putString("edit_endtime",item.getTv_endTime());
+                        editbundle.putInt("a_position",a_position);
+                        editbundle.putInt("spinner",item.getIv_recycle_icon());
+                        editIntent.putExtras(editbundle);
+                        activityLauncher_edit.launch(editIntent);
+
+                    }
+                });
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+
+                ad.setView(dialog_view);
+                AlertDialog alertDialog = ad.create();
+                alertDialog.show();
+
+
+
+
+                //final WorkoutData item = workoutarray.get(a_position);
+                /*Intent editIntent = new Intent(getActivity(),Frag_Activity_Additem.class);
                 Bundle editbundle = new Bundle();
                 editbundle.putString("edit_exdata",item.getTv_exData());
                 editbundle.putString("edit_starttime",item.getTv_startTime());
@@ -131,13 +189,9 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                 editbundle.putInt("a_position",a_position);
                 editbundle.putInt("spinner",item.getIv_recycle_icon());
                 editIntent.putExtras(editbundle);
-                activityLauncher_edit.launch(editIntent);
-                //startActivity(editIntent);
-
-                //Toast.makeText(getActivity(), item.getTv_startTime(), Toast.LENGTH_SHORT).show();
+                activityLauncher_edit.launch(editIntent);*/
             }
         });
-
 
 
         ActivityResultLauncher<Intent> activityLauncher_add = registerForActivityResult(
@@ -171,6 +225,7 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                                 WorkoutData workout = new WorkoutData(img_path,exdata,starttime,endtime,todaydate);
                                 workoutarray.add(workout);
                                 workoutAdapter.notifyDataSetChanged();
+
                             }
                         }
                     }
@@ -192,8 +247,37 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
 
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        savePreference();
+    }
 
+    private void savePreference() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(workoutarray);
+        editor.putString("Workoutlog",json);
+        editor.apply();
+        Log.d("111", "savePreference: 일단 저장했음");
 
+    }
+
+    private ArrayList<WorkoutData> loadPreference(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains("Workoutlog")){
+            Gson gson = new GsonBuilder().create();
+            String json = sharedPreferences.getString("Workoutlog","");
+            Type workoutlogType = new TypeToken<ArrayList<WorkoutData>>(){}.getType();
+
+            workoutarray = gson.fromJson(json,workoutlogType);
+            Log.d("111", "loadPreference: " + workoutarray.size());
+            Log.d("111", "loadPreference: 일단 불러왔음");
+            return workoutarray;
+        }
+        return workoutarray;
+    }
 
     //new 가 문제인지 확인해보기
     /*@Override

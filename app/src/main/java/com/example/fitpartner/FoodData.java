@@ -9,13 +9,15 @@ public class FoodData {
     private String tv_protein;
     private String tv_fooddate;
     private String tv_foodtime;
+    private String bitmapToString;
 
-    public FoodData(Bitmap iv_food_picture, String tv_calorie, String tv_protein, String tv_fooddate, String tv_foodtime) {
+    public FoodData(Bitmap iv_food_picture, String tv_calorie, String tv_protein, String tv_fooddate, String tv_foodtime, String bitmapToString) {
         this.iv_food_picture = iv_food_picture;
         this.tv_calorie = tv_calorie;
         this.tv_protein = tv_protein;
         this.tv_fooddate = tv_fooddate;
         this.tv_foodtime = tv_foodtime;
+        this.bitmapToString = bitmapToString;
     }
 
     public Bitmap getIv_food_picture() {
@@ -56,5 +58,13 @@ public class FoodData {
 
     public void setTv_foodtime(String tv_foodtime) {
         this.tv_foodtime = tv_foodtime;
+    }
+
+    public String getBitmapToString() {
+        return bitmapToString;
+    }
+
+    public void setBitmapToString(String bitmapToString) {
+        this.bitmapToString = bitmapToString;
     }
 }

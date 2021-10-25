@@ -1,22 +1,23 @@
 package com.example.fitpartner;
 
-import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Build;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -25,23 +26,36 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Frag_PictureLog extends Fragment {
 
+    private final String Filename = "20211023";
+
     private View view;
     private TextView tv_addbtn;
+    private ImageView iv_bestPicture;
+    private TextView tv_bestDate;
+    private TextView tv_bestWeight;
+    private TextView tv_bestMuscle;
+    private TextView tv_bestFat;
 
     private ArrayList<BodyData> bodyDataArrayList;
+    private ArrayList<BodyData> bestArray;
     private BodyAdapter bodyAdapter;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
@@ -59,7 +73,12 @@ public class Frag_PictureLog extends Fragment {
         view = inflater.inflate(R.layout.frag_picturelog,container,false);
 
 
-        tv_addbtn = view.findViewById(R.id.textView_addbutton);
+        tv_addbtn = (TextView)view.findViewById(R.id.textView_addbutton);
+        iv_bestPicture = (ImageView)view.findViewById(R.id.imageView_best_picture);
+        tv_bestDate = (TextView) view.findViewById(R.id.textView_best_date);
+        tv_bestWeight = (TextView) view.findViewById(R.id.textView_best_weight);
+        tv_bestMuscle = (TextView) view.findViewById(R.id.textView_best_muscle);
+        tv_bestFat = (TextView) view.findViewById(R.id.textView_best_fat);
 
         //리사이클러뷰위치 찾아서 연결해주기
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_bodypciture);
@@ -67,9 +86,78 @@ public class Frag_PictureLog extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         bodyDataArrayList = new ArrayList<>();
-        bodyAdapter = new BodyAdapter(bodyDataArrayList);
+        bodyAdapter = new BodyAdapter(bodyDataArrayList,getActivity());
         recyclerView.setAdapter(bodyAdapter);
 
+        //최고의 사진 선정용 리스트 생성
+        bestArray = new ArrayList<>();
+
+        //저장된 데이터 불러오기
+        bodyDataArrayList = loadPreference();
+        bodyAdapter.setAdapter(bodyDataArrayList);
+        bodyAdapter.notifyDataSetChanged();
+
+        bestArray = loadBestCondition();
+        if(bestArray.size() != 0){
+            iv_bestPicture.setImageBitmap(bestArray.get(0).getIv_bodypicture());
+            tv_bestDate.setText(bestArray.get(0).getTv_picturedate());
+            tv_bestWeight.setText(bestArray.get(0).getTv_totalWeight());
+            tv_bestMuscle.setText(bestArray.get(0).getTv_proteinRate());
+            tv_bestFat.setText(bestArray.get(0).getTv_fatRate());
+        }
+
+
+        bodyAdapter.setOnClickListener(new BodyAdapter.myRecyclerViewClickListener() {
+            @Override
+            public void whenItemClick(int position) {
+                final BodyData item = bodyDataArrayList.get(position);
+                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                View dialog_view = inflater.inflate(R.layout.dialog_bodypicture_view,null);
+                ImageView iv_bodyExpansion = dialog_view.findViewById(R.id.imageView_expansion);
+                Button btn_saveBody = dialog_view.findViewById(R.id.button_saveBody);
+                Button btn_bestPick = dialog_view.findViewById(R.id.button_bestPick);
+
+                btn_saveBody.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "갤러리에 저장", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                btn_bestPick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "최고의 사진 등록", Toast.LENGTH_SHORT).show();
+                        //저장용 데이터 array 하나 세팅
+                        if(bestArray.size() != 0){
+                            bestArray.set(0,item);
+                        }
+                        else {
+                            bestArray.add(item);
+                        }
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Gson gson = new GsonBuilder().create();
+                        String json = gson.toJson(bestArray);
+                        editor.putString("BestBodylog",json);
+                        editor.apply();
+                        //나머지 데이터들 set
+                        iv_bestPicture.setImageBitmap(item.getIv_bodypicture());
+                        tv_bestDate.setText(item.getTv_picturedate());
+                        tv_bestWeight.setText(item.getTv_totalWeight());
+                        tv_bestMuscle.setText(item.getTv_proteinRate());
+                        tv_bestFat.setText(item.getTv_fatRate());
+                    }
+                });
+
+                iv_bodyExpansion.setImageBitmap(item.getIv_bodypicture());
+                ad.setView(dialog_view);
+                AlertDialog alertDialog = ad.create();
+                alertDialog.show();
+
+
+            }
+        });
 
         //다이얼로그 뷰 만들어놓기
         View dialog_view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_picturelog,null,false);
@@ -103,6 +191,27 @@ public class Frag_PictureLog extends Fragment {
                 }
         );
 
+        iv_bestPicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("1111", "onClick: 만듬");
+                        AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                        View dialog_view = inflater.inflate(R.layout.dialog_bestbodypicture_view,null);
+                        ImageView iv_picture_expansion = dialog_view.findViewById(R.id.imageView_bestpicture_expansion);
+                        if (bestArray.size() != 0){
+                            iv_picture_expansion.setImageBitmap(bestArray.get(0).getIv_bodypicture());
+                            ad.setView(dialog_view);
+                            AlertDialog alertDialog = ad.create();
+                            alertDialog.show();
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "먼저 최고의 사진을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                });
+
         tv_addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,9 +229,7 @@ public class Frag_PictureLog extends Fragment {
                 et_addweight.setText(null);
                 et_addfat.setText(null);
                 et_addproteon.setText(null);
-                /*et_addweight.setHint("몸무게 입력 (Kg)");
-                et_addfat.setHint("체지방량 입력 (Kg)");
-                et_addproteon.setHint("근골격량 입력 (Kg)");*/
+
 
                 iv_addbody.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -208,13 +315,18 @@ public class Frag_PictureLog extends Fragment {
 
                         Bitmap bodypicture = bitmap_body;
                         if (bodypicture != null){
-                            body = new BodyData(weight,fat,protein,bodypicture,dateData);
+                            body = new BodyData(weight,fat,protein,bodypicture,dateData,null);
+                            body.setBodyBitmapToString(saveBitmapToPng(bodypicture));
                         } else {
-                            body = new BodyData(weight,fat,protein,bodypicture,dateData);
+                            body = new BodyData(weight,fat,protein,null,dateData,null);
                         }
 
-                        bodyDataArrayList.add(body);
+                        bodyDataArrayList.add(0,body);
                         bodyAdapter.notifyDataSetChanged();
+
+                        savePreference();
+
+
                         dialogInterface.dismiss();
                     }
                 });
@@ -230,9 +342,111 @@ public class Frag_PictureLog extends Fragment {
         });
 
 
-
-
         return view;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void savePreference() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(bodyDataArrayList);
+        editor.putString("Bodylog",json);
+        editor.apply();
+        Log.d("111", "savePreference: 일단 저장했음");
+
+    }
+
+
+    /*private void savePreference() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new GsonBuilder().create();
+        //비트맵만 변환해주고 다시넣기
+        for (int i = 0; i < bodyDataArrayList.size(); i++){
+            String path = saveBitmapToPng(bodyDataArrayList.get(i).getIv_bodypicture());
+            bodyDataArrayList.get(i).setBodyBitmapToString(path);
+            bodyDataArrayList.get(i).setIv_bodypicture(null);
+        }
+
+        String json = gson.toJson(bodyDataArrayList);
+        editor.putString("Bodylog",json);
+        editor.apply();
+        Log.d("111", "savePreference: 일단 저장했음");
+
+    }*/
+
+    private ArrayList<BodyData> loadPreference(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains("Bodylog")){
+            Gson gson = new GsonBuilder().create();
+            String json = sharedPreferences.getString("Bodylog","");
+            Type bodylogType = new TypeToken<ArrayList<BodyData>>(){}.getType();
+            bodyDataArrayList = gson.fromJson(json,bodylogType);
+
+            for (int i = 0; i < bodyDataArrayList.size(); i++){
+                Bitmap bitimg;
+                if (bodyDataArrayList.get(i).getBodyBitmapToString() != null){
+                    String imgpath = bodyDataArrayList.get(i).getBodyBitmapToString();
+                    bitimg = BitmapFactory.decodeFile(imgpath);
+                }
+                else {
+                    bitimg = null;
+                }
+                bodyDataArrayList.get(i).setIv_bodypicture(bitimg);
+            }
+
+            return bodyDataArrayList;
+        }
+        return bodyDataArrayList;
+    }
+
+    private ArrayList<BodyData> loadBestCondition() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("BestBodylog")) {
+            Gson gson = new GsonBuilder().create();
+            String json_best = sharedPreferences.getString("BestBodylog", "");
+            Type bodylogType = new TypeToken<ArrayList<BodyData>>() {}.getType();
+            bestArray = gson.fromJson(json_best, bodylogType);
+
+            Bitmap bitimg;
+            if (bestArray.get(0).getBodyBitmapToString() != null){
+                String imgpath = bestArray.get(0).getBodyBitmapToString();
+                bitimg = BitmapFactory.decodeFile(imgpath);
+            }
+            else {
+                bitimg = null;
+            }
+            bestArray.get(0).setIv_bodypicture(bitimg);
+
+            return bestArray;
+        }
+        return bestArray;
+    }
+
+    public String saveBitmapToPng(Bitmap bitmap) {
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmmss");
+        String dateData = dateformat.format(mDate);
+
+        File tempFile = new File(getActivity().getFilesDir(),dateData);
+        String imgpath = getActivity().getFilesDir() + "/" + dateData;
+        try{
+            tempFile.createNewFile();
+            FileOutputStream out = new FileOutputStream(tempFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,out);
+            out.close();
+            return imgpath;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+
 
 }

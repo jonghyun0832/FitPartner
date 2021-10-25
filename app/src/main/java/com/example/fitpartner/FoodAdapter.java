@@ -2,8 +2,10 @@ package com.example.fitpartner;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
+
+    private final String Filename = "20211023";
 
     //리사이클러뷰에는 온클릭리스너가 없으니까 인터페이스로 구현해보자
     public interface myRecyclerViewClickListener{
@@ -41,6 +48,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public FoodAdapter(ArrayList<FoodData> arraylist, Context context) {
         this.arraylist = arraylist;
         this.context = context;
+    }
+
+    public void setAdapter(ArrayList<FoodData> arrayList){
+        this.arraylist = arrayList;
+
     }
 
 
@@ -71,6 +83,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     //삭제
     public void remove(int position){
         try{
+            // 리사이클러뷰 데이터 삭제시 그에 해당하는 데이터 삭제
+            String path = arraylist.get(position).getBitmapToString();
+            if(path != null){
+                Log.d("1111", "remove: ");
+                String [] patharray = path.split("/");
+                context.deleteFile(patharray[patharray.length-1]);
+            }
             arraylist.remove(position);
             notifyItemRemoved(position);
         }catch (IndexOutOfBoundsException ex){
@@ -117,6 +136,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             remove(pos);
+                            dialogInterface.dismiss();
+
+
                         }
                     });
                     ad.setNegativeButton("아니오", new DialogInterface.OnClickListener() {

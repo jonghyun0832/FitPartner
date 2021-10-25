@@ -10,13 +10,15 @@ public class BodyData {
     private String tv_proteinRate;
     private Bitmap iv_bodypicture;
     private String tv_picturedate;
+    private String bodyBitmapToString;
 
-    public BodyData(String tv_totalWeight, String tv_fatRate, String tv_proteinRate, Bitmap iv_bodypicture, String tv_picturedate) {
+    public BodyData(String tv_totalWeight, String tv_fatRate, String tv_proteinRate, Bitmap iv_bodypicture, String tv_picturedate, String bodyBitmapToString) {
         this.tv_totalWeight = tv_totalWeight;
         this.tv_fatRate = tv_fatRate;
         this.tv_proteinRate = tv_proteinRate;
         this.iv_bodypicture = iv_bodypicture;
         this.tv_picturedate = tv_picturedate;
+        this.bodyBitmapToString = bodyBitmapToString;
     }
 
     public String getTv_totalWeight() {
@@ -58,4 +60,13 @@ public class BodyData {
     public void setTv_picturedate(String tv_picturedate) {
         this.tv_picturedate = tv_picturedate;
     }
+
+    public String getBodyBitmapToString() {
+        return bodyBitmapToString;
+    }
+
+    public void setBodyBitmapToString(String bodyBitmapToString) {
+        this.bodyBitmapToString = bodyBitmapToString;
+    }
 }
+
