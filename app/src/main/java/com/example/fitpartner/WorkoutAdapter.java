@@ -3,6 +3,7 @@ package com.example.fitpartner;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -23,12 +24,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder> {
-
+    private final String mainData = "MainData";
     /*public int itemposition;
 
     //컨텍스트 박스 만들기
@@ -206,6 +210,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             remove(pos);
+                            SharedPreferences sharedPreferences = context.getSharedPreferences(mainData, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            Gson gson = new GsonBuilder().create();
+                            String json = gson.toJson(arrayList);
+                            editor.putString("Workoutlog",json);
+                            editor.apply();
                         }
                     });
                     ad.setNegativeButton("아니오", new DialogInterface.OnClickListener() {

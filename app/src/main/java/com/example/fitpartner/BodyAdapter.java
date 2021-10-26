@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.BodyViewHolder> {
 
-    private final String Filename = "20211023";
+    private final String mainData = "MainData";
 
     public interface myRecyclerViewClickListener{
         void whenItemClick(int position);
@@ -129,7 +129,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.BodyViewHolder
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             remove(pos);
-                            SharedPreferences sharedPreferences = context.getSharedPreferences(Filename, Context.MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = context.getSharedPreferences(mainData, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             Gson gson = new GsonBuilder().create();
                             String json = gson.toJson(arraylist);

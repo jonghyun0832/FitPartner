@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView; //바텀 네이게이션 뷰 (하단바)
+    public BottomNavigationView bottomNavigationView; //바텀 네이게이션 뷰 (하단바)
     private FragmentManager fm;
     private FragmentTransaction ft;
     private Frag_Progress frag_progress; // 달성도
@@ -31,10 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     static String today;
 
-    long now = System.currentTimeMillis();
-    Date mDate = new Date(now);
-    SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
-    String dateData = dateformat.format(mDate);
+
+
 
 
 
@@ -43,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d("111", "onCreate: 이건한번만");
         setContentView(R.layout.activity_main);
+        long now = System.currentTimeMillis();
+        Date mDate = new Date(now);
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
+        String dateData = dateformat.format(mDate);
+        today = dateData;
+
+        //오늘날짜 전역변수로 세팅
+        //((StaticItem)getApplication()).setDate(dateData);
 
         bottomNavigationView = findViewById(R.id.bottomNavi);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //프래그먼트 교체가 일어나는 실행문이다.
-    private void setFrag(int n) {
+    public void setFrag(int n) {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         switch (n){

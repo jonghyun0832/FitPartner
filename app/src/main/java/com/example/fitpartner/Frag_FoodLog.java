@@ -46,7 +46,10 @@ import java.util.Date;
 
 public class Frag_FoodLog extends Fragment {
 
-    private final String Filename = "20211023";
+    //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
+    private final String Filename = ((MainActivity)getActivity()).today;
+    //private final String Filename = "20211025";
+
 
     private View view;
     private TextView tv_water;

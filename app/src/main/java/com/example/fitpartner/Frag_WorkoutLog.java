@@ -38,8 +38,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListener
-
-    private final String Filename = "20211023";
+    //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
+    private final String Filename = ((MainActivity)getActivity()).today;
+    //private final String Filename = "20211025";
+    private final String mainData = "MainData";
 
     private Button btn_add;
     private ArrayList<WorkoutData> workoutarray;
@@ -133,6 +135,14 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                                 item.setTv_startTime(starttime);
                                 item.setTv_endTime(endtime);
                                 workoutAdapter.notifyItemChanged(a_position);
+
+                                //savePreference();
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                Gson gson = new GsonBuilder().create();
+                                String json = gson.toJson(workoutarray);
+                                editor.putString("Workoutlog",json);
+                                editor.apply();
                             }
                         }
                     }
@@ -222,9 +232,11 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
                                 } else {
                                     img_path = R.drawable.ic_terrible;
                                 }
-                                WorkoutData workout = new WorkoutData(img_path,exdata,starttime,endtime,todaydate);
+                                WorkoutData workout = new WorkoutData(img_path,exdata,starttime,endtime,todaydate,Filename);
                                 workoutarray.add(workout);
                                 workoutAdapter.notifyDataSetChanged();
+
+                                savePreference();
 
                             }
                         }
@@ -250,22 +262,27 @@ public class Frag_WorkoutLog extends Fragment { //implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-        savePreference();
+        //savePreference();
     }
 
     private void savePreference() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences_main = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+        //SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor_main = sharedPreferences_main.edit();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(workoutarray);
-        editor.putString("Workoutlog",json);
-        editor.apply();
+        //editor.putString("Workoutlog",json);
+        //editor.apply();
+        editor_main.putString("Workoutlog",json);
+        editor_main.apply();
         Log.d("111", "savePreference: 일단 저장했음");
 
     }
 
     private ArrayList<WorkoutData> loadPreference(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filname, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
         if(sharedPreferences.contains("Workoutlog")){
             Gson gson = new GsonBuilder().create();
             String json = sharedPreferences.getString("Workoutlog","");

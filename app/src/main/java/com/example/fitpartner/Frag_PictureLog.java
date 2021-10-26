@@ -43,8 +43,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Frag_PictureLog extends Fragment {
-
-    private final String Filename = "20211023";
+    //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
+    private final String Filename = ((MainActivity)getActivity()).today;
+    //private final String Filename = "20211025";
+    private final String mainData = "MainData";
 
     private View view;
     private TextView tv_addbtn;
@@ -135,7 +137,7 @@ public class Frag_PictureLog extends Fragment {
                         else {
                             bestArray.add(item);
                         }
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         Gson gson = new GsonBuilder().create();
                         String json = gson.toJson(bestArray);
@@ -315,10 +317,10 @@ public class Frag_PictureLog extends Fragment {
 
                         Bitmap bodypicture = bitmap_body;
                         if (bodypicture != null){
-                            body = new BodyData(weight,fat,protein,bodypicture,dateData,null);
+                            body = new BodyData(weight,fat,protein,bodypicture,dateData,null,Filename);
                             body.setBodyBitmapToString(saveBitmapToPng(bodypicture));
                         } else {
-                            body = new BodyData(weight,fat,protein,null,dateData,null);
+                            body = new BodyData(weight,fat,protein,null,dateData,null,Filename);
                         }
 
                         bodyDataArrayList.add(0,body);
@@ -351,13 +353,16 @@ public class Frag_PictureLog extends Fragment {
     }
 
     private void savePreference() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences_main = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+        //SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor_main = sharedPreferences_main.edit();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(bodyDataArrayList);
-        editor.putString("Bodylog",json);
-        editor.apply();
-        Log.d("111", "savePreference: 일단 저장했음");
+        //editor.putString("Bodylog",json);
+        //editor.apply();
+        editor_main.putString("Bodylog",json);
+        editor_main.apply();
 
     }
 
@@ -381,7 +386,8 @@ public class Frag_PictureLog extends Fragment {
     }*/
 
     private ArrayList<BodyData> loadPreference(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
         if(sharedPreferences.contains("Bodylog")){
             Gson gson = new GsonBuilder().create();
             String json = sharedPreferences.getString("Bodylog","");
@@ -406,7 +412,7 @@ public class Frag_PictureLog extends Fragment {
     }
 
     private ArrayList<BodyData> loadBestCondition() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("BestBodylog")) {
             Gson gson = new GsonBuilder().create();
             String json_best = sharedPreferences.getString("BestBodylog", "");
