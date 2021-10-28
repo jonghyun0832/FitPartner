@@ -8,12 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Selection;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,20 +35,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 public class Frag_FoodLog extends Fragment {
 
     //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
     private final String Filename = ((MainActivity)getActivity()).today;
+    private final String mainData = "MainData";
     //private final String Filename = "20211025";
 
 
@@ -56,6 +56,7 @@ public class Frag_FoodLog extends Fragment {
     private ImageButton imgbtn_plus;
     private ImageButton imgbtn_minus;
     private ImageView iv_addfood;
+    private Button btn_targetWater;
     private int waters;
 
 
@@ -90,6 +91,7 @@ public class Frag_FoodLog extends Fragment {
         imgbtn_plus = view.findViewById(R.id.imageButton_plus);
         imgbtn_minus = view.findViewById(R.id.imageButton_minus);
         iv_addfood = view.findViewById(R.id.iv_addFood);
+        btn_targetWater = view.findViewById(R.id.button_targetWater);
 
         //리사이클러뷰 만들기
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_foodlog);
@@ -156,12 +158,60 @@ public class Frag_FoodLog extends Fragment {
         });
 
 
+        //목표량 정하기(물)
+        btn_targetWater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+
+                ad.setTitle("목표량 설정하기 (2000ml -> 2000) ");
+
+                EditText et_targetWater = new EditText(getActivity());
+                et_targetWater.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                //저장된 목표량 가져오기
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+                String targetWater = sharedPreferences.getString("targetWater","0");
+
+                if (targetWater != null){
+                    //데이터가 있으면 표시해주고
+                    et_targetWater.setText(targetWater);
+                } else {
+                    //데이터가 없으면 힌트표시
+                    et_targetWater.setHint("ex) 2L => 2000");
+                }
+
+                ad.setView(et_targetWater);
+
+                ad.setPositiveButton("설정하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        String targetWater = et_targetWater.getText().toString();
+                        editor.putString("targetWater",targetWater);
+                        editor.apply();
+                        dialogInterface.dismiss();
+                    }
+                });
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = ad.create();
+                alertDialog.show();
+
+            }
+        });
+
         //+버튼 눌렀을때
         imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 waters += 100;
                 tv_water.setText(waters + " mL");
+                saveWater();
             }
         });
 
@@ -171,6 +221,7 @@ public class Frag_FoodLog extends Fragment {
             public void onClick(View view) {
                 waters -= 100;
                 tv_water.setText(waters + " mL");
+                saveWater();
             }
         });
 
@@ -294,7 +345,6 @@ public class Frag_FoodLog extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         savePreference();
-        saveWater();
     }
 
     public String saveBitmapToPng(Bitmap bitmap, int i) {

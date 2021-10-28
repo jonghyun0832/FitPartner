@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +39,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,10 +124,32 @@ public class Frag_PictureLog extends Fragment {
                 Button btn_saveBody = dialog_view.findViewById(R.id.button_saveBody);
                 Button btn_bestPick = dialog_view.findViewById(R.id.button_bestPick);
 
+
+                iv_bodyExpansion.setImageBitmap(item.getIv_bodypicture());
+                ad.setView(dialog_view);
+                AlertDialog alertDialog = ad.create();
+                alertDialog.show();
+
                 btn_saveBody.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "갤러리에 저장", Toast.LENGTH_SHORT).show();
+
+                        //사진이 존재할떄만 갤러리에 저장시키기
+                        if (item.getIv_bodypicture() != null){
+                            iv_bodyExpansion.setDrawingCacheEnabled(true);
+                            Bitmap bitmap = iv_bodyExpansion.getDrawingCache();
+                            MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "FitPartner_" + Filename, "");
+                            Toast.makeText(getActivity(), "갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                            alertDialog.dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "사진이 없습니다.", Toast.LENGTH_SHORT).show();
+                            alertDialog.dismiss();
+                        }
+
+
+                        //saveImage((item.getIv_bodypicture()), "FitPartner_" + Filename);
+
+
                     }
                 });
 
@@ -149,13 +176,9 @@ public class Frag_PictureLog extends Fragment {
                         tv_bestWeight.setText(item.getTv_totalWeight());
                         tv_bestMuscle.setText(item.getTv_proteinRate());
                         tv_bestFat.setText(item.getTv_fatRate());
+                        alertDialog.dismiss();
                     }
                 });
-
-                iv_bodyExpansion.setImageBitmap(item.getIv_bodypicture());
-                ad.setView(dialog_view);
-                AlertDialog alertDialog = ad.create();
-                alertDialog.show();
 
 
             }
@@ -367,6 +390,8 @@ public class Frag_PictureLog extends Fragment {
     }
 
 
+
+
     /*private void savePreference() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -452,6 +477,54 @@ public class Frag_PictureLog extends Fragment {
             return null;
         }
     }
+
+
+    //이미지 저장
+    /*public boolean saveImage(Bitmap bitmap, String saveImageName) {
+        String saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/directoryName";
+        File file = new File(saveDir);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        String fileName = saveImageName + ".png";
+        File tempFile = new File(saveDir, fileName);
+        FileOutputStream output = null;
+
+        try {
+            if (tempFile.createNewFile()) {
+                output = new FileOutputStream(tempFile);
+                // 이미지 줄이기
+                // 사진 비율로 압축하도록 수정할 것
+                //Bitmap newBitmap = bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                // 이미지 압축. 압축된 파일은 output stream에 저장. 2번째 인자는 압축률인데 100으로 해도 많이 깨진다..
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            } else {
+                // 같은 이름의 파일 존재
+                Log.d("TEST_LOG", "같은 이름의 파일 존재:"+saveImageName);
+
+                return false;
+            }
+        } catch (FileNotFoundException e) {
+            Log.d("TEST_LOG", "파일을 찾을 수 없음");
+            return false;
+
+        } catch (IOException e) {
+            Log.d("TEST_LOG", "IO 에러");
+            e.printStackTrace();
+            return false;
+
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }*/
 
 
 

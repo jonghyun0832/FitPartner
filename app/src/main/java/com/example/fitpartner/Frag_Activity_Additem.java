@@ -136,6 +136,18 @@ public class Frag_Activity_Additem extends AppCompatActivity {
             String edit_starttime = editbundle.getString("edit_starttime");
             String edit_endtime = editbundle.getString("edit_endtime");
             int startspinner = editbundle.getInt("spinner");
+
+            String [] pickerStartArray = edit_starttime.split(" : ");
+            String [] pickerEndArray = edit_endtime.split(" : ");
+            pickerHour = Integer.parseInt(pickerStartArray[0]);
+            pickerMinute = Integer.parseInt(pickerStartArray[1]);
+            transHour = Integer.parseInt(pickerEndArray[0]);
+            pickerMinute2 = Integer.parseInt(pickerEndArray[1]);
+            starthour = pickerHour;
+            endhour = transHour;
+            startminute = pickerMinute;
+            endminute = pickerMinute2;
+
             editnum = editbundle.getInt("a_position");
             et_exData.setText(edit_exdata);
             tv_startTime.setText(edit_starttime);
