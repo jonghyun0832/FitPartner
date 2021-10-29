@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,15 @@ public class Frag_Progress extends Fragment {
     //private int total_calorie;
     //Integer.parseInt(((MainActivity)getActivity()).today)
 
+    //베너 인덱스용
+    private int tmp_index = 0;
+    boolean isRunning;
+    Handler handler;
+    TextView tv_progressBanner;
+    MRunnable runnable;
+    Thread thread;
+    String[] myArr = {"오늘의 추천 레시피 확인하세요", "오늘의 추천 식단 확인하세요", "오늘의 추천 마트 확인하세요"};
+
 
     @Nullable
     @Override
@@ -52,6 +62,7 @@ public class Frag_Progress extends Fragment {
 
         long totay_date = cv_log.getDate() - 1;
         cv_log.setDate(totay_date);
+
 
         //운동기록
         TextView tv_logExdata = view.findViewById(R.id.textView_log_exdata);
@@ -71,6 +82,33 @@ public class Frag_Progress extends Fragment {
         TextView tv_moreWorkout = view.findViewById(R.id.textView_more_workout);
         TextView tv_moreBodylog = view.findViewById(R.id.textView_more_bodylog);
         TextView tv_moreFoodlog = view.findViewById(R.id.textView_more_foodlog);
+
+        //배너등록
+        tv_progressBanner = view.findViewById(R.id.textView_ProgressBanner);
+        tv_progressBanner.setText(myArr[tmp_index]);
+        handler = new Handler();
+        runnable = new MRunnable();
+
+        isRunning = true;
+
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(isRunning){
+                    try {
+                        Thread.sleep(3000);
+                        handler.post(runnable);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+            }
+        });
+        thread.start();
+
+
+
 
         //초기세팅
         {
@@ -446,5 +484,28 @@ public class Frag_Progress extends Fragment {
         return datearray;
     }
 
+    //인터페이스로 runnable구현
+    public class MRunnable implements Runnable {
+        @Override
+        public void run() {
+            //int i=0;
+            //bar.incrementProgressBy(5);
+            if (tmp_index < myArr.length - 1){
+                tmp_index += 1;
+                tv_progressBanner.setText(myArr[tmp_index]);
+            }
+            else {
+                tmp_index = 0;
+                tv_progressBanner.setText(myArr[tmp_index]);
+            }
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        isRunning = false;
+        thread.interrupt();
+    }
 }

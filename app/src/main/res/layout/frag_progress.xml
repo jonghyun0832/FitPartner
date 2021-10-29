@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView_ProgressTitle"
+            android:id="@+id/textView_ProgressBanner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -34,7 +34,7 @@
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_ProgressTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_ProgressBanner" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView_workout"
