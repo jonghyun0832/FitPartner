@@ -16,13 +16,20 @@
         <TextView
             android:id="@+id/textView_ProgressBanner"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:text="수행 정도에 따른 텍스트"
+            android:layout_height="60dp"
+            android:background="@color/background"
+            android:gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:text="운동자극명언"
             android:textAlignment="center"
+            android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -48,7 +48,8 @@ public class Frag_Progress extends Fragment {
     TextView tv_progressBanner;
     MRunnable runnable;
     Thread thread;
-    String[] myArr = {"오늘의 추천 레시피 확인하세요", "오늘의 추천 식단 확인하세요", "오늘의 추천 마트 확인하세요"};
+    String[] myArr = {"비만의 괴로움이 운동의 괴로움보다 크다", "마법의 약은 없다", "시도하지않으면 변하는건없다",
+    "운동에 시간을 내지 않으면 병때문에 시간을 내야 될지도 모른다","고통은 지나간다, 아름다움은 남는다"};
 
 
     @Nullable

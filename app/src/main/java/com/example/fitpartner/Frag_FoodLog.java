@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -58,6 +60,7 @@ public class Frag_FoodLog extends Fragment {
     private ImageView iv_addfood;
     private Button btn_targetWater;
     private int waters;
+    private CheckBox cb_service;
 
 
     private ArrayList<FoodData> foodArray;
@@ -92,6 +95,7 @@ public class Frag_FoodLog extends Fragment {
         imgbtn_minus = view.findViewById(R.id.imageButton_minus);
         iv_addfood = view.findViewById(R.id.iv_addFood);
         btn_targetWater = view.findViewById(R.id.button_targetWater);
+        cb_service = view.findViewById(R.id.checkBox_service);
 
         //리사이클러뷰 만들기
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_foodlog);
@@ -154,6 +158,32 @@ public class Frag_FoodLog extends Fragment {
                 AlertDialog alertDialog = ad.create();
                 alertDialog.show();
                 et_edcalorie.requestFocus();
+            }
+        });
+
+        //서비스 실행하기
+        cb_service.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cb_service.isChecked() == true){
+                    Intent intent = new Intent(getContext(), WaterService.class);
+                    intent.setAction("startForeground");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getActivity().startForegroundService(intent);
+                        Log.d("111", "onClick: ");
+                    } else{
+                        getActivity().startService(intent);
+                    }
+                } else {
+                    Intent intent = new Intent(getContext(), WaterService.class);
+                    intent.setAction("stopForeground");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getActivity().startForegroundService(intent);
+                        Log.d("111", "onClick: ");
+                    } else{
+                        getActivity().startService(intent);
+                    }
+                }
             }
         });
 
