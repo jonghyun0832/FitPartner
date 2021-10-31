@@ -50,6 +50,7 @@ public class Frag_FoodLog extends Fragment {
     //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
     private final String Filename = ((MainActivity)getActivity()).today;
     private final String mainData = "MainData";
+    private final String optionData = "OptionData";
     //private final String Filename = "20211025";
 
 
@@ -59,9 +60,12 @@ public class Frag_FoodLog extends Fragment {
     private ImageButton imgbtn_minus;
     private ImageView iv_addfood;
     private Button btn_targetWater;
-    private int waters;
+    public int waters;
     private CheckBox cb_service;
 
+    public int getWaters() {
+        return waters;
+    }
 
     private ArrayList<FoodData> foodArray;
     private FoodAdapter foodAdapter;
@@ -110,10 +114,21 @@ public class Frag_FoodLog extends Fragment {
         // 설정완료
 
         //저장된거 불러오기
+        //수분
         waters = Integer.parseInt(loadWater());
+        //리사이클러뷰
         foodArray = loadPreference();
         foodAdapter.setAdapter(foodArray);
         foodAdapter.notifyDataSetChanged();
+        //체크박스
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(optionData, Context.MODE_PRIVATE);
+        String isrunning = sharedPreferences.getString("FGService","0");
+        if(isrunning.equals("1")){
+            cb_service.setChecked(true);
+        } else {
+            cb_service.setChecked(false);
+        }
+
 
         //온클릭구현한거(어답터먼저) 메인에서 사용
         foodAdapter.setOnClickListener(new FoodAdapter.myRecyclerViewClickListener() {
@@ -165,8 +180,23 @@ public class Frag_FoodLog extends Fragment {
         cb_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //체크상태 저장하기
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(optionData, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String isrunning;
+                if (cb_service.isChecked() == true){
+                    isrunning = "1";
+                } else {
+                    isrunning = "0";
+                }
+                editor.putString("FGService",isrunning);
+                editor.apply();
+
+
                 if(cb_service.isChecked() == true){
                     Intent intent = new Intent(getContext(), WaterService.class);
+                    //서비스에 오늘 날짜를 넘겨준다.
+                    intent.putExtra("date",Filename);
                     intent.setAction("startForeground");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         getActivity().startForegroundService(intent);
@@ -242,6 +272,16 @@ public class Frag_FoodLog extends Fragment {
                 waters += 100;
                 tv_water.setText(waters + " mL");
                 saveWater();
+
+                if(cb_service.isChecked()){
+                    //notification 업데이트용
+                    Intent intent = new Intent(getContext(), WaterService.class);
+                    intent.putExtra("change","1");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getActivity().startForegroundService(intent);
+                        Log.d("111", "onClick: ");
+                    }
+                }
             }
         });
 
@@ -252,6 +292,17 @@ public class Frag_FoodLog extends Fragment {
                 waters -= 100;
                 tv_water.setText(waters + " mL");
                 saveWater();
+
+                if(cb_service.isChecked() == true){
+                    //notification 업데이트용
+                    Intent intent = new Intent(getContext(), WaterService.class);
+                    intent.putExtra("change","1");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getActivity().startForegroundService(intent);
+                        Log.d("111", "onClick: ");
+                    }
+                }
+
             }
         });
 
@@ -304,6 +355,15 @@ public class Frag_FoodLog extends Fragment {
 
         return view;
     }
+
+    //포그라운드에서 늘려도 함께 늘어날 수 있도록
+    @Override
+    public void onResume() {
+        super.onResume();
+        waters = Integer.parseInt(loadWater());
+        tv_water.setText(waters + "mL");
+    }
+
     public Bitmap byteArrayToBitmap(byte[] byteArray){
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
         return bitmap;
@@ -323,6 +383,7 @@ public class Frag_FoodLog extends Fragment {
         String water = sharedPreferences.getString("Water","0");
         return water;
     }
+
 
     private void savePreference() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Filename, Context.MODE_PRIVATE);
@@ -376,6 +437,7 @@ public class Frag_FoodLog extends Fragment {
         super.onDestroy();
         savePreference();
     }
+
 
     public String saveBitmapToPng(Bitmap bitmap, int i) {
         long now = System.currentTimeMillis();

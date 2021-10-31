@@ -161,7 +161,7 @@ public class Frag_Progress extends Fragment {
                 if (totalTime == 0) { //운동기록(시간)이 없을때
                     tv_logTime.setText("기록없음");
                 } else {
-                    tv_logTime.setText("총 운동 시간 : "  + totalTime / 60 + " 시간" + totalTime % 60 + " 분");
+                    tv_logTime.setText("총 운동 시간 : "  + totalTime / 60 + "시간 " + totalTime % 60 + "분");
                 }
                 //운동기록 텍스트 설정
                 if (exerciseData != "") {
@@ -315,7 +315,7 @@ public class Frag_Progress extends Fragment {
                     if (totalTime == 0) { //운동기록(시간)이 없을때
                         tv_logTime.setText("기록없음");
                     } else {
-                        tv_logTime.setText("총 운동 시간 : "  + totalTime / 60 + " 시간" + totalTime % 60 + " 분");
+                        tv_logTime.setText("총 운동 시간 : "  + totalTime / 60 + "시간 " + totalTime % 60 + "분");
                     }
                     //운동기록 텍스트 설정
                     if (exerciseData != "") {
