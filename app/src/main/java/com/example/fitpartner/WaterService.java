@@ -1,6 +1,5 @@
 package com.example.fitpartner;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,15 +7,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-
-import java.io.File;
 
 public class WaterService extends Service {
     public WaterService() {
@@ -53,6 +49,8 @@ public class WaterService extends Service {
             serviceBuilder = startForegroundService();
         } else if ("stopForeground".equals(intent.getAction())){
             Log.d("111", "onStartCommand: stop포그라운드");
+            Intent stopintent = new Intent(getApplicationContext(), Screen_Service.class);
+            stopService(stopintent);
             stopForeground(true);
         } else {
             Log.d("111", "onStartCommand: 스타트도 스탑도아님");
@@ -82,6 +80,8 @@ public class WaterService extends Service {
     private NotificationCompat.Builder startForegroundService(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"default");
         //오레오 이상에서는 채널이 필요하다 뒤에있는게 채널 이름
+        Intent intent = new Intent(getApplicationContext(), Screen_Service.class);
+        startService(intent);
         builder.setSmallIcon(R.drawable.app_icon);
         builder.setContentTitle("WaterPartner");
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.water));

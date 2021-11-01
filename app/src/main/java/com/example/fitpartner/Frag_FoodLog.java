@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -52,6 +53,8 @@ public class Frag_FoodLog extends Fragment {
     private final String mainData = "MainData";
     private final String optionData = "OptionData";
     //private final String Filename = "20211025";
+
+    ProgressBar pb_water;
 
 
     private View view;
@@ -101,6 +104,7 @@ public class Frag_FoodLog extends Fragment {
         btn_targetWater = view.findViewById(R.id.button_targetWater);
         cb_service = view.findViewById(R.id.checkBox_service);
 
+
         //리사이클러뷰 만들기
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_foodlog);
         gridLayoutManager = new GridLayoutManager(getActivity(),2);
@@ -128,6 +132,15 @@ public class Frag_FoodLog extends Fragment {
         } else {
             cb_service.setChecked(false);
         }
+
+
+        //프로그래스바
+        pb_water = view.findViewById(R.id.progressBar_inside_water);
+        SharedPreferences sharedPreferencesTarget = getActivity().getSharedPreferences(mainData, Context.MODE_PRIVATE);
+        String target = sharedPreferencesTarget.getString("targetWater","0");
+        int water_target = Integer.parseInt(target);
+        pb_water.setMax(water_target);
+        pb_water.setProgress(waters);
 
 
         //온클릭구현한거(어답터먼저) 메인에서 사용
@@ -269,9 +282,10 @@ public class Frag_FoodLog extends Fragment {
         imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                waters += 100;
-                tv_water.setText(waters + " mL");
+                waters += 50;
                 saveWater();
+
+                pb_water.setProgress(waters);
 
                 if(cb_service.isChecked()){
                     //notification 업데이트용
@@ -282,6 +296,12 @@ public class Frag_FoodLog extends Fragment {
                         Log.d("111", "onClick: ");
                     }
                 }
+                if (waters < water_target){
+                    tv_water.setText(waters + " mL");
+                } else {
+                    tv_water.setText("목표 수분 섭취량을 달성했습니다!");
+                }
+
             }
         });
 
@@ -289,9 +309,15 @@ public class Frag_FoodLog extends Fragment {
         imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                waters -= 100;
+                if (waters == 0){
+                    waters = 0;
+                } else {
+                    waters -= 50;
+                }
                 tv_water.setText(waters + " mL");
                 saveWater();
+
+                pb_water.setProgress(waters);
 
                 if(cb_service.isChecked() == true){
                     //notification 업데이트용

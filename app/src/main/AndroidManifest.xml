@@ -5,10 +5,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-feature
-        android:name="android.hardware.camera"
+        android:name="android.hardware.camera "
         android:required="false" />
 
     <application
@@ -19,10 +20,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitPartner">
+        <receiver
+            android:name=".Screen_Recevier"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <service
+            android:name=".Screen_Service"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".Activity_Front_Screen"
+            android:exported="true" />
+
         <service
             android:name=".WaterService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activity_frag_viewBodyPicture"
