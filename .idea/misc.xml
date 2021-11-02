@@ -17,6 +17,8 @@
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14427083333333332" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/drawable/myinfo.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/drawable/round_button.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/drawable/round_button2.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/drawable/round_button3.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_daily.xml" value="0.21422101449275363" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_frag_addfood.xml" value="0.264" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_frag_additem.xml" value="0.16799999999999998" />
@@ -24,6 +26,7 @@
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_front_screen.xml" value="0.25" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_mypage.xml" value="0.21920289855072464" />
+        <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_stop_watch.xml" value="0.25" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_sub_edit.xml" value="0.21920289855072464" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/activity_sub_mypage.xml" value="0.2" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/daily.xml" value="0.264" />
@@ -49,6 +52,7 @@
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/recycler_bestpicture_item.xml" value="0.1852355072463768" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/recycler_foodlog_item.xml" value="0.4" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/recycler_pciturelog_item.xml" value="0.536" />
+        <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/recycler_stopwatch_item.xml" value="0.25" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/recycler_workoutlog_item.xml" value="0.4" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/running.xml" value="0.264" />
         <entry key="..\:/Users/jongh/AndroidStudioProjects/FitPartner/app/src/main/res/layout/stretching.xml" value="0.264" />

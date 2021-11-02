@@ -38,6 +38,25 @@ public class Activity_Front_Screen extends AppCompatActivity {
 
     CircleProgressBar circleProgressBar;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("111", "onResume: ");
+        //현재 수분량 가져오기
+        SharedPreferences sharedPreferences = getSharedPreferences(Date, Context.MODE_PRIVATE);
+        String water = sharedPreferences.getString("Water","0");
+        water_calculate = Integer.parseInt(water);
+
+
+        //목표 수분량 가져오기
+        SharedPreferences sharedPreferencesTarget = getSharedPreferences(mainData, Context.MODE_PRIVATE);
+        String target = sharedPreferencesTarget.getString("targetWater","0");
+        water_target = Integer.parseInt(target);
+
+
+        //진행률 설정
+        circleProgressBar.setProgress((water_calculate*100)/water_target);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

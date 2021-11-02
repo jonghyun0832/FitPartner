@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private Frag_WorkoutLog frag_workoutLog; //운동 일지
     private Frag_PictureLog frag_pictureLog; //사진 일지
     private ImageButton imgbtn_mypage; //마이페이지 버튼
+    private ImageButton imgbtn_stopWatch; //스톱워치 버튼
 
     static String today;
 
@@ -39,15 +40,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         Log.d("111", "onCreate: 이건한번만");
         setContentView(R.layout.activity_main);
+
+
         long now = System.currentTimeMillis();
         Date mDate = new Date(now);
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
         String dateData = dateformat.format(mDate);
         today = dateData;
+
+        //마이페이지
+        imgbtn_mypage = findViewById(R.id.imageButton_mypage);
+        imgbtn_mypage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,SubActivity_Mypage.class);
+                startActivity(intent);
+            }
+        });
+
+        //스톱워치
+        imgbtn_stopWatch = findViewById(R.id.imageButton_stopWatch);
+        imgbtn_stopWatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,Activity_StopWatch.class);
+                startActivity(intent);
+            }
+        });
+
 
         //오늘날짜 전역변수로 세팅
         //((StaticItem)getApplication()).setDate(dateData);
@@ -79,16 +101,6 @@ public class MainActivity extends AppCompatActivity {
         frag_workoutLog = new Frag_WorkoutLog();
         frag_pictureLog = new Frag_PictureLog();
         setFrag(0); //첫 프래그먼트 화면을 무엇으로 지정할것인지 선택
-
-
-        imgbtn_mypage = findViewById(R.id.imageButton_mypage);
-        imgbtn_mypage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,SubActivity_Mypage.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
