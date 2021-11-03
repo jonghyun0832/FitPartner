@@ -41,7 +41,6 @@ public class Activity_Front_Screen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("111", "onResume: ");
         //현재 수분량 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences(Date, Context.MODE_PRIVATE);
         String water = sharedPreferences.getString("Water","0");
@@ -64,6 +63,8 @@ public class Activity_Front_Screen extends AppCompatActivity {
         setContentView(R.layout.activity_front_screen);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         Log.d("111", "onCreate: 스크린표시액티비티");
+
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
