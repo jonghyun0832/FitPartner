@@ -140,6 +140,9 @@ public class Frag_Progress extends Fragment {
             if (today[1] < 10) {
                 str_month = "0" + today[1];
             }
+            if (today[2] < 10){
+                str_day = "0" + today[2];
+            }
             String str_date = str_year + str_month + str_day;
 
             //운동기록 가져오기
@@ -272,6 +275,7 @@ public class Frag_Progress extends Fragment {
                 workoutArray = new ArrayList<>();
                 bodyArray = new ArrayList<>();
 
+
                 //데이터 저장용 변수들
                 //운동기록
                 String exerciseData = ""; //운동 내용
@@ -294,7 +298,12 @@ public class Frag_Progress extends Fragment {
                 if (month + 1 < 10) {
                     str_month = "0" + (month + 1);
                 }
+                if (day < 10){
+                    str_day = "0" + day;
+                }
                 String str_date = str_year + str_month + str_day;
+
+                Log.d("111", "onSelectedDayChange: " + str_date);
 
                 //운동기록 가져오기
                 workoutArray = loadWorkoutPreference();
