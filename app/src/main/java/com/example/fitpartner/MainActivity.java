@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Frag_PictureLog frag_pictureLog; //사진 일지
     private ImageButton imgbtn_mypage; //마이페이지 버튼
     private ImageButton imgbtn_stopWatch; //스톱워치 버튼
+    private ImageButton imgbtn_chart; //차트보기 버튼
 
     static String today;
 
@@ -66,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,Activity_StopWatch.class);
+                startActivity(intent);
+            }
+        });
+
+        imgbtn_chart = findViewById(R.id.imageButton_chart);
+        imgbtn_chart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,Activity_Chart.class);
                 startActivity(intent);
             }
         });

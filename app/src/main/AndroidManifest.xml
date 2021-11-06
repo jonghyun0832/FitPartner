@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitPartner">
         <activity
+            android:name=".Activity_Chart"
+            android:exported="true" />
+        <activity
             android:name=".Activity_StopWatch"
             android:exported="true" />
 
@@ -29,7 +32,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_ON"/>
+                <action android:name="android.intent.action.SCREEN_ON" />
             </intent-filter>
         </receiver>
 

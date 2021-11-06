@@ -187,6 +187,7 @@ public class Frag_Progress extends Fragment {
                 int cnt = 0; //평균내기용
                 for (int i = 0; i < bodyArray.size(); i++) {
                     if (bodyArray.get(i).getCreateDate().equals(str_date)) {
+
                         //몸무게,근골격량, 체지방량 평균내기
                         String[] weightarray = bodyArray.get(i).getTv_totalWeight().split(" ");
                         String[] proteinarray = bodyArray.get(i).getTv_proteinRate().split(" ");
@@ -457,15 +458,15 @@ public class Frag_Progress extends Fragment {
             }.getType();
             bodyArray = gson.fromJson(json, bodylogType);
 
-            for (int i = 0; i < foodArray.size(); i++) {
+            for (int i = 0; i < bodyArray.size(); i++) {
                 Bitmap bitimg;
-                if (foodArray.get(i).getBitmapToString() != null) {
-                    String imgpath = foodArray.get(i).getBitmapToString();
+                if (bodyArray.get(i).getBodyBitmapToString() != null) {
+                    String imgpath = bodyArray.get(i).getBodyBitmapToString();
                     bitimg = BitmapFactory.decodeFile(imgpath);
                 } else {
                     bitimg = null;
                 }
-                foodArray.get(i).setIv_food_picture(bitimg);
+                bodyArray.get(i).setIv_bodypicture(bitimg);
             }
 
 

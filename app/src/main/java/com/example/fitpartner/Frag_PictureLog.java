@@ -334,8 +334,8 @@ public class Frag_PictureLog extends Fragment {
                             protein = "근골격량 : " + et_addproteon.getText().toString() + " Kg";
                         } else {
                             weight = "몸무게 : " + et_addweight.getText().toString() + " Kg";
-                            fat = null;
-                            protein = null;
+                            fat = "체지방량 : " + 0 + " Kg";
+                            protein = "근골격량 : " +0 + " Kg";
                         }
 
                         Bitmap bodypicture = bitmap_body;

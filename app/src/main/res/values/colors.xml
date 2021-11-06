@@ -12,5 +12,6 @@
     <color name="background">#ADD4CAFF</color>
     <color name="untouch">#BCC6C6C6</color>
     <color name="hint">#88888888</color>
+    <color name="graphColor">#88AC2020</color>
 
 </resources>
