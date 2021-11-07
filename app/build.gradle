@@ -40,7 +40,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.dinuscxj:circleprogressbar:1.3.0' // CircleProgressBar
 
-    implementation'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation'com.github.PhilJay:MPAndroidChart:v3.1.0' //차트용
+
+    implementation "com.github.skydoves:balloon:1.1.0" //풍선용
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

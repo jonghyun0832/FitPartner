@@ -1,23 +1,34 @@
 package com.example.fitpartner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.OnBalloonClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +36,8 @@ import java.util.Date;
 public class Activity_Front_Screen extends AppCompatActivity {
 
     private final String mainData = "MainData";
+
+    ImageButton imgbtn_help;
 
 
     long now = System.currentTimeMillis();
@@ -64,17 +77,54 @@ public class Activity_Front_Screen extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         Log.d("111", "onCreate: 스크린표시액티비티");
 
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+
+        imgbtn_help = (ImageButton)findViewById(R.id.imageButton_help);
         Button btn_increase = (Button) findViewById(R.id.button_increase);
         Button btn_decrease = (Button) findViewById(R.id.button_decrease);
         TextView tv_screenWater = (TextView) findViewById(R.id.textView_screen_water);
         circleProgressBar = (CircleProgressBar) findViewById(R.id.cpb_circlebar);
+
+
+        //도움말 만들기 (ballon 사용)
+
+        Balloon balloon = new Balloon.Builder(this)
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.9f)
+                .setHeight(180)
+                .setTextSize(20f)
+                .setCornerRadius(4f)
+                .setAlpha(0.7f)
+                .setText("종이컵 기준 한컵 : 200ml\n커피(사이즈 : R) : 350 ~ 360ml\n커피(사이즈 : L) : 470 ~ 480ml\n캔음료 : 220 ~ 240ml\n뚱캔 : 340 ~ 360ml")
+                .setTextColor(ContextCompat.getColor(this, R.color.black))
+                .setBackgroundColor(ContextCompat.getColor(this, R.color.bar_text))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        TextView textView = balloon.getContentView().findViewById(R.id.balloon_text);
+        textView.setGravity(Gravity.LEFT);
+
+        //말풍선 클릭시
+        balloon.setOnBalloonClickListener(new OnBalloonClickListener() {
+            @Override
+            public void onBalloonClick(@NonNull View view) {
+                balloon.dismiss();
+            }
+        });
+        //도움말 버튼 클릭시
+        imgbtn_help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon.showAlignBottom(imgbtn_help);
+            }
+        });
+
 
         //현재 수분량 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences(Date, Context.MODE_PRIVATE);

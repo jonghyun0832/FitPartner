@@ -22,7 +22,7 @@
 
 
             <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/linechart_weight"
+                android:id="@+id/linechart_body"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline46"
@@ -30,30 +30,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline45" />
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/linechart_fat"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline48"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline47" />
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/linechart_protein"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline49" />
-
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="50dp" />
+                app:layout_constraintGuide_begin="80dp" />
 
 
             <androidx.constraintlayout.widget.Guideline
@@ -61,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="350dp" />
+                app:layout_constraintGuide_begin="380dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline47"
@@ -84,12 +66,29 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_begin="750dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline50"
+            <TextView
+                android:id="@+id/textView_hard_bodyTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="신체 데이터"
+                android:textAlignment="textStart"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/linechart_body"
+                app:layout_constraintEnd_toStartOf="@+id/button_popupbody"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_popupbody" />
+
+            <Button
+                android:id="@+id/button_popupbody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="1050dp" />
+                android:text="팝업메뉴"
+                app:layout_constraintBottom_toTopOf="@+id/guideline45"
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
