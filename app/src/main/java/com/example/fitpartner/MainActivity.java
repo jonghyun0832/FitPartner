@@ -12,6 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton imgbtn_mypage; //마이페이지 버튼
     private ImageButton imgbtn_stopWatch; //스톱워치 버튼
     private ImageButton imgbtn_chart; //차트보기 버튼
+    private AdView mAdView;
 
     static String today;
 
@@ -43,6 +49,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d("111", "onCreate: 이건한번만");
         setContentView(R.layout.activity_main);
+
+
+        //광고베너
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = findViewById(R.id.adView_main);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         long now = System.currentTimeMillis();
