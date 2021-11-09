@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/action_menu1"
-        android:title="최근 7개" />
+        android:title="최근 4개" />
     <item
         android:id="@+id/action_menu2"
-        android:title="최근 15개" />
+        android:title="최근 7개" />
     <item
         android:id="@+id/action_menu3"
-        android:title="최근 30개" />
+        android:title="최근 14개" />
 
 </menu>

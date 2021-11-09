@@ -72,7 +72,6 @@ public class Activity_Chart extends AppCompatActivity {
 
     ArrayList<BodyData> bodyArrayList;
 
-    private int aa;
     private int dataSize = 7; //차트 기본 데이터 갯수
 
     int stepTotal; //스텝수
@@ -98,10 +97,10 @@ public class Activity_Chart extends AppCompatActivity {
         });
 
         //차트 등록
-        chart_body = findViewById(R.id.linechart_body);
-        btn_popup = findViewById(R.id.button_popupbody);
-        tv_fitSteps = findViewById(R.id.textView_fitSteps);
-        tv_fitCalories = findViewById(R.id.textView_fitCalories);
+        chart_body = (LineChart)findViewById(R.id.linechart_body);
+        btn_popup = (Button)findViewById(R.id.button_popupbody);
+        tv_fitSteps = (TextView)findViewById(R.id.textView_fitSteps);
+        tv_fitCalories = (TextView)findViewById(R.id.textView_fitCalories);
         circleProgressBar = (CircleProgressBar) findViewById(R.id.cpb_circlebar_step);
 
 
@@ -125,11 +124,6 @@ public class Activity_Chart extends AppCompatActivity {
             if (isActivate == true){
                 readDataSteps(googleSignInAccount); //걸음수 가져오기
                 readDataCalories(); //칼로리가져오기
-                /*try {
-                    saveDatas();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
                 isActivate = false;
             }
 
@@ -151,13 +145,13 @@ public class Activity_Chart extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if(menuItem.getItemId() == R.id.action_menu1){
-                            dataSize = 2;
-
-                        } else if (menuItem.getItemId() == R.id.action_menu2){
                             dataSize = 4;
 
+                        } else if (menuItem.getItemId() == R.id.action_menu2){
+                            dataSize = 7;
+
                         } else {
-                            dataSize = 6;
+                            dataSize = 14;
                         }
                         setChart_body(dataSize);
                         chart_body.invalidate();
@@ -386,10 +380,10 @@ public class Activity_Chart extends AppCompatActivity {
 
     //소모한 칼로리 받아오기
     private void readDataCalories() {
-        // Invoke the History API to fetch the data with the query
+        // 칼로리 받아오기
         Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
                 .readDailyTotal(DataType.TYPE_CALORIES_EXPENDED)
-                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() { //스레드 돌고 완료됬을때
                     @Override
                     public void onSuccess(DataSet dataSet) {
                         double CaloriesBurn;
@@ -408,13 +402,6 @@ public class Activity_Chart extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
-                        /*SharedPreferences.Editor editor = getSharedPreferences("DataAll", MODE_PRIVATE).edit();
-                        editor.putInt("Steps", total);
-                        editor.putFloat("dist", (float) rounfoffdistance);
-                        editor.putFloat("cal", (float) rounfoffCalories);
-                        editor.apply();*/
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
