@@ -1,5 +1,7 @@
 package com.example.fitpartner;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -12,7 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dinuscxj.progressbar.CircleProgressBar;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -21,30 +26,64 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptionsExtension;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Activity_Chart extends AppCompatActivity {
 
     private LineChart chart_body;
     private Button btn_popup;
-    private AdView mAdView;
+    private TextView tv_fitSteps, tv_fitCalories;
+
+    long now = System.currentTimeMillis();
+    Date mDate = new Date(now);
+    SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
+    String dateData = dateformat.format(mDate);
+
+    private final String FileName = dateData;
 
     private final String mainData = "MainData";
 
     ArrayList<BodyData> bodyArrayList;
 
-    private int dataSize = 7;
+    private int aa;
+    private int dataSize = 7; //차트 기본 데이터 갯수
+
+    int stepTotal; //스텝수
+    double rounfoffCalories = 0.0 ;
+
+    private boolean isActivate = true;
+
+    CircleProgressBar circleProgressBar;
+
+    private static final int REQUEST_OAUTH = 1;
+    private final String FitData = "FitData";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +97,51 @@ public class Activity_Chart extends AppCompatActivity {
             }
         });
 
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
         //차트 등록
         chart_body = findViewById(R.id.linechart_body);
         btn_popup = findViewById(R.id.button_popupbody);
+        tv_fitSteps = findViewById(R.id.textView_fitSteps);
+        tv_fitCalories = findViewById(R.id.textView_fitCalories);
+        circleProgressBar = (CircleProgressBar) findViewById(R.id.cpb_circlebar_step);
+
+
+
+        // 구글 연결
+        GoogleSignInOptionsExtension fitnessOptions =
+                FitnessOptions.builder()
+                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+                        .build();
+
+        GoogleSignInAccount googleSignInAccount =
+                GoogleSignIn.getAccountForExtension(this, fitnessOptions);
+
+        if (!GoogleSignIn.hasPermissions(googleSignInAccount, fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this, // your activity
+                    REQUEST_OAUTH, // e.g. 1
+                    googleSignInAccount,
+                    fitnessOptions);
+        } else {
+            if (isActivate == true){
+                readDataSteps(googleSignInAccount); //걸음수 가져오기
+                readDataCalories(); //칼로리가져오기
+                /*try {
+                    saveDatas();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+                isActivate = false;
+            }
+
+
+        }
+
+
+
+
+
 
         btn_popup.setText("최근 7개");
-
         btn_popup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,6 +347,99 @@ public class Activity_Chart extends AppCompatActivity {
 
         LineData lineData = new LineData(dataSets);
         chart_body.setData(lineData);
+
+    }
+
+    //걸음수 받아오기
+    public void readDataSteps(GoogleSignInAccount googleSignInAccount) {
+        Fitness.getHistoryClient(this, googleSignInAccount)
+                .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+
+                        if (dataSet.isEmpty()) {
+                            stepTotal = 0;
+                        } else {
+                            stepTotal = dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
+                            tv_fitSteps.setText(String.valueOf(stepTotal + "걸음"));
+
+                            //걸음수 진행률 표시
+                            circleProgressBar.setProgress((stepTotal*100)/10000); //목표 걸음수 추가 요망
+                            try {
+                                saveDatas();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Activity_Chart.this, "FailStep", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+    //소모한 칼로리 받아오기
+    private void readDataCalories() {
+        // Invoke the History API to fetch the data with the query
+        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .readDailyTotal(DataType.TYPE_CALORIES_EXPENDED)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                        double CaloriesBurn;
+                        rounfoffCalories = 0.0;
+                        if(dataSet.isEmpty()){
+                            CaloriesBurn = 0.0;
+                        }
+                        else {
+                            CaloriesBurn = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).asFloat();
+                            rounfoffCalories = Math.round(CaloriesBurn * 100.0) / 100.0;
+                        }
+                        //Toast.makeText(Activity_Chart.this, "Calories  " + rounfoffCalories, Toast.LENGTH_SHORT).show();
+                        tv_fitCalories.setText(rounfoffCalories+" Kcal");
+                        try {
+                            saveDatas();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        /*SharedPreferences.Editor editor = getSharedPreferences("DataAll", MODE_PRIVATE).edit();
+                        editor.putInt("Steps", total);
+                        editor.putFloat("dist", (float) rounfoffdistance);
+                        editor.putFloat("cal", (float) rounfoffCalories);
+                        editor.apply();*/
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //Toast.makeText(Activity_Chart.this, "Unabel to Calculate c", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void saveDatas() throws JSONException {
+
+        Log.d("111", "saveDatas: " + stepTotal + "  " + rounfoffCalories);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(FitData, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        JSONObject wholedata = new JSONObject(); //최종
+        JSONArray Jarray = new JSONArray();
+        JSONObject Jdata = new JSONObject();
+        Jdata.put("Step",stepTotal);
+        Jdata.put("Calories",rounfoffCalories);
+        Jarray.put(Jdata);
+        wholedata.put(FileName,Jarray);
+        editor.putString(FitData,wholedata.toString());
+        editor.apply();
 
     }
 

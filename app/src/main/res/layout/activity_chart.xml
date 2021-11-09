@@ -50,21 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="400dp" />
+                app:layout_constraintGuide_begin="450dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline48"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="700dp" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline49"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="750dp" />
+                app:layout_constraintGuide_begin="850dp" />
 
 
             <TextView
@@ -82,6 +75,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/button_popupbody" />
 
+            <TextView
+                android:id="@+id/textView_hard_fitTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="구글 피트"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/guideline47"
+                app:layout_constraintEnd_toEndOf="@+id/textView_hard_bodyTitle"
+                app:layout_constraintStart_toStartOf="@+id/textView_hard_bodyTitle" />
+
             <Button
                 android:id="@+id/button_popupbody"
                 android:layout_width="wrap_content"
@@ -90,17 +97,47 @@
                 app:layout_constraintBottom_toTopOf="@+id/guideline45"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <com.google.android.gms.ads.AdView
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/adView"
+            <TextView
+                android:id="@+id/textView_fitSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="110dp"
+                android:text="걸음수 표시"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cpb_circlebar_step" />
+
+            <TextView
+                android:id="@+id/textView_fitCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:text="칼로리 소모"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cpb_circlebar_step"
+                app:layout_constraintEnd_toEndOf="@+id/cpb_circlebar_step"
+                app:layout_constraintStart_toStartOf="@+id/cpb_circlebar_step" />
+
+            <com.dinuscxj.progressbar.CircleProgressBar
+                android:id="@+id/cpb_circlebar_step"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline48"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline47"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_ad_unit_id_for_test"/>
+                app:progress_end_color="#C35012"
+                app:progress_start_color="#B5F84A"
+                app:progress_stroke_cap="round"
+                app:progress_stroke_width="20dp "
+                app:progress_text_size="1sp"
+                app:style="solid_line" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
