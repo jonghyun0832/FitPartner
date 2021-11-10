@@ -211,17 +211,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
 
-            <Button
-                android:id="@+id/button_targetWater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+            <ImageButton
+                android:id="@+id/imageButton_targetWater"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="30dp"
                 android:background="@null"
-                android:text="목표 설정하기"
-                android:textSize="14sp"
-                android:textStyle="italic"
                 app:layout_constraintBottom_toTopOf="@+id/guideline8"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_baseline_edit_small_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

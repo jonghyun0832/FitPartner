@@ -2,15 +2,20 @@ package com.example.fitpartner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -32,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Frag_FoodLog frag_foodLog;  //식습관 관리
     private Frag_WorkoutLog frag_workoutLog; //운동 일지
     private Frag_PictureLog frag_pictureLog; //사진 일지
-    private ImageButton imgbtn_mypage; //마이페이지 버튼
+    //private ImageButton imgbtn_mypage; //마이페이지 버튼
     private ImageButton imgbtn_stopWatch; //스톱워치 버튼
     private ImageButton imgbtn_chart; //차트보기 버튼
     private AdView mAdView;
@@ -41,14 +46,24 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("111", "onCreate: 이건한번만");
         setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==PackageManager.PERMISSION_GRANTED){
+                Log.d("permission", "권한 설정 완료");
+            }
+            else {
+                Log.d("permission", "권한 설정 요청");
+
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]
+                        {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            }
+        }
 
 
         //광고베너
@@ -70,15 +85,6 @@ public class MainActivity extends AppCompatActivity {
         String dateData = dateformat.format(mDate);
         today = dateData;
 
-        //마이페이지
-        imgbtn_mypage = findViewById(R.id.imageButton_mypage);
-        imgbtn_mypage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,SubActivity_Mypage.class);
-                startActivity(intent);
-            }
-        });
 
         //스톱워치
         imgbtn_stopWatch = findViewById(R.id.imageButton_stopWatch);
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //차트화면으로 이동
         imgbtn_chart = findViewById(R.id.imageButton_chart);
         imgbtn_chart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,10 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        //오늘날짜 전역변수로 세팅
-        //((StaticItem)getApplication()).setDate(dateData);
-
+        //하단 네비게이션바 프래그먼트
         bottomNavigationView = findViewById(R.id.bottomNavi);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -156,8 +160,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
-
+    //권한 요청 결과 받는곳
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        Log.d("permission", "onRequestPermissionsResult: ");
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+            Log.d("permission", "PERMISSION: " + permissions[0] + "was" + grantResults[0]);
+        }else {
+            Toast.makeText(this, "권한을 허용해주세요\n기능 사용이 제한될 수 있습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

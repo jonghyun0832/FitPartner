@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-feature
         android:name="android.hardware.camera "
@@ -23,7 +24,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
+            android:value="@string/admob_app_id" />
 
         <activity
             android:name=".Activity_Chart"
@@ -63,12 +64,6 @@
             android:exported="true" />
         <activity
             android:name=".Frag_Activity_Additem"
-            android:exported="true" />
-        <activity
-            android:name=".SubActivity_Edit"
-            android:exported="true" />
-        <activity
-            android:name=".SubActivity_Mypage"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

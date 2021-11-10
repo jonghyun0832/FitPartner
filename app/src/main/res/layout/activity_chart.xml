@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".Activity_Chart">
 
     <ScrollView
@@ -64,14 +65,13 @@
                 android:id="@+id/textView_hard_bodyTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:text="신체 데이터"
-                android:textAlignment="textStart"
+                android:textAlignment="center"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/linechart_body"
-                app:layout_constraintEnd_toStartOf="@+id/button_popupbody"
+                app:layout_constraintEnd_toEndOf="@+id/button_popupbody"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/button_popupbody" />
 
@@ -79,15 +79,14 @@
                 android:id="@+id/textView_hard_fitTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="구글 피트"
-                android:textAlignment="textStart"
+                android:text="Today's Fitness"
+                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/guideline47"
-                app:layout_constraintEnd_toEndOf="@+id/textView_hard_bodyTitle"
-                app:layout_constraintStart_toStartOf="@+id/textView_hard_bodyTitle" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/button_popupbody"
@@ -102,9 +101,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="110dp"
-                android:text="걸음수 표시"
+                android:text="0"
                 android:textSize="30sp"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="100dp"
-                android:text="칼로리 소모"
+                android:text="0"
+                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -138,6 +139,17 @@
                 app:progress_stroke_width="20dp "
                 app:progress_text_size="1sp"
                 app:style="solid_line" />
+
+            <ImageButton
+                android:id="@+id/imageButton_setTargetStep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline47"
+                app:srcCompat="@drawable/ic_baseline_edit_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

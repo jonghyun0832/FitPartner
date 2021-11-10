@@ -48,21 +48,18 @@ import java.util.Date;
 
 public class Frag_FoodLog extends Fragment {
 
-    //private final String Filename = ((StaticItem)getActivity().getApplication()).getDate();
     private final String Filename = ((MainActivity)getActivity()).today;
     private final String mainData = "MainData";
     private final String optionData = "OptionData";
-    //private final String Filename = "20211025";
 
     ProgressBar pb_water;
-
 
     private View view;
     private TextView tv_water;
     private ImageButton imgbtn_plus;
     private ImageButton imgbtn_minus;
     private ImageView iv_addfood;
-    private Button btn_targetWater;
+    private ImageButton imgbtn_targetWater;
     public int waters;
     private CheckBox cb_service;
 
@@ -97,11 +94,13 @@ public class Frag_FoodLog extends Fragment {
         Log.d("111", "onCreateView: food");
         view = inflater.inflate(R.layout.frag_foodlog,container,false);
 
+
+
         tv_water = view.findViewById(R.id.textView_water);
         imgbtn_plus = view.findViewById(R.id.imageButton_plus);
         imgbtn_minus = view.findViewById(R.id.imageButton_minus);
         iv_addfood = view.findViewById(R.id.iv_addFood);
-        btn_targetWater = view.findViewById(R.id.button_targetWater);
+        imgbtn_targetWater = view.findViewById(R.id.imageButton_targetWater);
         cb_service = view.findViewById(R.id.checkBox_service);
 
 
@@ -232,11 +231,10 @@ public class Frag_FoodLog extends Fragment {
 
 
         //목표량 정하기(물)
-        btn_targetWater.setOnClickListener(new View.OnClickListener() {
+        imgbtn_targetWater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
-
                 ad.setTitle("목표량 설정하기 (2000ml -> 2000) ");
 
                 EditText et_targetWater = new EditText(getActivity());
