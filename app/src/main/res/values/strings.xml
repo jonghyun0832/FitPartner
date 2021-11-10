@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">FitPartner</string>
-    <string name="admob_app_id">ca-app-pub-6386972820590711~7933967438</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6386972820590711/9985415703</string>
-    <string name="banner_ad_unit_id_for_test">ca-app-pub-3940256099942544/6300978111</string>
-
-
-</resources>
