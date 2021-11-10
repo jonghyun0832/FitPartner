@@ -117,7 +117,7 @@ public class Activity_Chart extends AppCompatActivity {
         Intent intent = Activity_Chart.this.getPackageManager().getLaunchIntentForPackage("com.google.android.apps.fitness");
         //구글 피트가 없으면
         if (intent == null){
-            Toast.makeText(this, "없어요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "daily fitness를 확인하시려면\n구글피트를 설치해주세요", Toast.LENGTH_SHORT).show();
             //구글피트 설치 안내문구
             tv_fitSteps.setText("Google Fit를 \n설치해주세요");
             tv_fitCalories.setText("");
