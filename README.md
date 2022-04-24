@@ -9,7 +9,6 @@
 ### Application Version
 * minSdk 21
 * targetSdk 31
-* 
 ### Development
 Android Studio 
 
